@@ -1,6 +1,6 @@
 <template>
-<div class="flex items-center justify-center h-screen">
-    <div class="w-full max-w-md p-4 bg-white rounded-lg shadow-md">
+<div class="flex items-center justify-center bg-slate-300 h-screen">
+    <div class="w-full max-w-md p-4 bg-white md:rounded-xl md:shadow-md">
         <AppHeader />
         <slot />
         <AppFooter />
