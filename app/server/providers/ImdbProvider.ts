@@ -1,6 +1,6 @@
 // Hier sollen die Daten eines bestimmten Films beim Provider IMDB abgefragt und zurückgegeben werden.
-import { IProvider } from './IProvider';
+import { ProviderInterface } from './ProviderInterface';
 
-export class ImdbProvider implements IProvider {
+export class ImdbProvider implements ProviderInterface {
 
 }
