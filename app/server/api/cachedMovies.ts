@@ -1,0 +1,1 @@
+// Gibt eine liste aller gecacheden Filme zurück. mit allen dazugehörigen Informationen.

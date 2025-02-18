@@ -1,0 +1,1 @@
+// Schnittstelle welcher sich von ProviderRegistry die verfügbaren provider holt
