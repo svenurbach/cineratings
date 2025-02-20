@@ -5,6 +5,7 @@ export default defineAppConfig({
       colors: {
         primary: '#ff0000'
       }
-    }
+    },
+    providerDirectory: 'server/providers',
   })
   

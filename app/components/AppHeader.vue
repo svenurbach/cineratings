@@ -1,7 +1,7 @@
 <template>
-    <div class="flex justify-between mb-10 h-12">
+    <div class="flex justify-between items-center mb-10 h-12">
         <Logo />
-        <div>CineRatings</div>
+        <h1 class="text-xl"><a href="/">CineRatings</a></h1>
         <Menu />
     </div>
     <div class="mb-10 mx-4">

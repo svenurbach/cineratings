@@ -1,3 +1,4 @@
 <template>
+  <ProviderList />
   <Welcome />
 </template>
