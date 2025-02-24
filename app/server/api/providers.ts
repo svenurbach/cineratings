@@ -1,7 +1,6 @@
 // Schnittstelle welcher sich von ProviderRegistry die verfügbaren Provider holt
-
-import ProviderRegistry from '../providers/ProviderRegistry';
+import ProviderService from '../services/ProviderService';
 
 export default defineEventHandler((event) => {
-    return ProviderRegistry.getRegisteredProviders();
+    return ProviderService.getRegisteredProviders();
  });

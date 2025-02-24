@@ -3,4 +3,6 @@ export interface IProviderResponse {
   providerName: string; // "The Movie Database"
   providerLogo: string;
   providerUrl: string;
+  primaryRating: number;
+  userRating: number;
 }

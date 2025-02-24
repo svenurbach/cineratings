@@ -5,6 +5,7 @@ export default {
         const selectedProviders = ref<Set<string>>(new Set());
 
         const toggleProvider = (provider: string) => {
+            console.log('toggleProvider', selectedProviders);
             if (selectedProviders.value.has(provider)) {
                 selectedProviders.value.delete(provider);
             } else {
@@ -12,6 +13,9 @@ export default {
             }
         };
 
+
+
+        
         return {
             data,
             status,
@@ -25,14 +29,14 @@ export default {
         console.log('Component mounted')
     },
 
-    onUnmounted() {
+    unmounted() {
         console.log('Component unmounted')
     },
 }
 </script>
 
 <template>
-    <div class="border border-solid border-black">
+    <div id="provider-list" class="border border-solid border-black">
         <h3 class="text-lg font-bold">Anbieterliste</h3>
         <div class="p-2">
             <div v-if="status === 'pending'">Loading...</div>
@@ -40,7 +44,7 @@ export default {
             <div v-else>
                 <ul>
                     <!-- TODO: Hier soll der lesbare Name aus der Klasse erscheinen als Text -->
-                    <li v-for="(value, providerId) in data">
+                    <li v-for="(value, providerId) in data" :key="providerId">
                         <label>
                             <input type="checkbox" :value="providerId" @change="toggleProvider(providerId)">
                             {{ providerId }}

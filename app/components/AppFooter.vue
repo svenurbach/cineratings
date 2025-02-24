@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-10 text-sm">
+    <div class="mt-10 text-sm text-gray-500">
         <div class="text-center">Sven Urbach, 2025</div>
         <div class="flex justify-center gap-4">
             <div><a href="https://github.com/svenurbach/" target="_blank">#GitHub</a></div> 

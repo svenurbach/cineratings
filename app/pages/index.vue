@@ -1,4 +1,6 @@
 <template>
-  <ProviderList />
-  <Welcome />
+  <div>
+    <ProviderList />
+    <WelcomeText />
+  </div>
 </template>

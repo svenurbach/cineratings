@@ -2,7 +2,7 @@
 import type { IProvider } from '../interfaces/IProvider';
 import type { IProviderResponse } from '../interfaces/IProviderResponse';
 
-export class ImdbProvider implements IProvider {
+export class MetacriticProvider implements IProvider {
 
     fetchMovie(query: string): Promise<IProviderResponse> {
         throw new Error('Method not implemented.');

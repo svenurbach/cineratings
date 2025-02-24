@@ -10,12 +10,15 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint'],
   tailwindcss: {
     exposeConfig: true,
     viewer: true,
     editorSupport: true,
     // and more...
+  },
+  eslint: {
+    // options here
   },
   runtimeConfig: {
      // can be overridden by NUXT_API_SECRET environment variable

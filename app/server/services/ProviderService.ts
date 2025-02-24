@@ -9,7 +9,7 @@ export default class ProviderRegistry {
 
         const appConfig = useAppConfig();
         const providerDirectory = appConfig.providerDirectory;
-        const providers: Record<string, { providerClassName: string }> = {};
+        const providers: Record<string, { providerName:string, providerClassName: string }> = {};
 
         fs.readdirSync(providerDirectory).forEach((file) => {
             if (file.endsWith('Provider.ts')) {
@@ -18,7 +18,8 @@ export default class ProviderRegistry {
                 // TODO Lesbaren Namen der Provider auslesen und mit geben
 
                 providers[providerName] = {
-                    providerClassName: providerClassName,
+                    providerName: providerName,
+                    providerClassName: providerClassName
                 };
             }
         });
