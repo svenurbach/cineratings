@@ -7,9 +7,26 @@
 // Gebe die Filmdaten zurück
 
 import ProviderFactory from '../factories/ProviderFactory';
+import { IMovie } from '../interfaces/IMovie';
 
 export default class DataService {
-  static async getMovieRatings(movieName: string, providerName: string = 'tmdb') {
+  providerList: string[] = ['tmdb', 'omdb'];
+  movieName: string = 'Inception';
+  aggregatedMovieRating: number = 0.0;
+  // MovieObject
+
+  // getMovieNameFromView
+  // setMovieName
+
+  // getProviderListFromView
+
+
+  // getAggregatedMovieRating from RatingService
+  // setAggregatedMovieRating
+
+
+
+  static async getMovieRatings(movieName: string, providerName: string = 'omdb') {
     const provider = ProviderFactory.getProvider(providerName);
 
     if (!provider) {
@@ -25,4 +42,15 @@ export default class DataService {
       throw error;
     }
   }
+
+  static async getMovieRatingsFromCache(movieName: string) {
+    return null;
+  }
+
+  static async getMovieRatingsFromProvider(movieName: string, providerName: string) {
+    return null;
+  }
+
+
+
 }

@@ -1,52 +1,49 @@
 // Hier sollen die Daten eines bestimmten Films beim Provider OMDB abgefragt und zurückgegeben werden.
+import type { IMovie } from '../interfaces/IMovie';
 import type { IProvider } from '../interfaces/IProvider';
 import type { IProviderResponse } from '../interfaces/IProviderResponse';
 
-export class OmdbProvider implements IProvider {
-    exampleResponse =
-        {
-            "Title": "Inception",
-            "Year": "2010",
-            "Rated": "PG-13",
-            "Released": "16 Jul 2010",
-            "Runtime": "148 min",
-            "Genre": "Action, Adventure, Sci-Fi",
-            "Director": "Christopher Nolan",
-            "Writer": "Christopher Nolan",
-            "Actors": "Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page",
-            "Plot": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.",
-            "Language": "English, Japanese, French",
-            "Country": "United States, United Kingdom",
-            "Awards": "Won 4 Oscars. 159 wins & 220 nominations total",
-            "Poster": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-            "Ratings": [
-                {
-                    "Source": "Internet Movie Database",
-                    "Value": "8.8/10"
-                },
-                {
-                    "Source": "Rotten Tomatoes",
-                    "Value": "87%"
-                },
-                {
-                    "Source": "Metacritic",
-                    "Value": "74/100"
+export default class OmdbProvider implements IProvider {
+    readonly providerId = 'omdb';
+    readonly providerName = 'Open Media Database';
+    readonly providerLogo = null;
+    readonly providerUrl = "https://www.omdbapi.com/";
+
+    async fetchMovie(query: string): Promise<IProviderResponse> {
+        try {
+            // Interne Server Route aufrufen. Token ist dort hinterlegt.
+            const response = await fetch(`api/providers/omdb-movie`);
+
+            if (!response.ok) throw new Error('Error fetching data');
+            const data = await response.json(); // Antwort nach JSON umwandeln
+            
+            // Check if more than one result was returned
+            // If so, return a list of movies to the view and let the user choose one
+            // Make a id search with the users choice
+            
+            const movieData = data; // Film aus der Antwort holen
+
+            if (!movieData) throw new Error('No movie found');
+
+            const providerResponse: IProviderResponse = {
+                providerId: this.providerId,
+                providerName: this.providerName,
+                providerLogo: this.providerLogo,
+                providerUrl: this.providerUrl,
+                primaryRating: movieData.Metascore,
+                userRating: movieData.imdbRating,
+                movie: {
+                    imdbId: movieData.imdbID,
+                    title: movieData.Title,
+                    releaseDate: movieData.Year
                 }
-            ],
-            "Metascore": "74",
-            "imdbRating": "8.8",
-            "imdbVotes": "2,645,456",
-            "imdbID": "tt1375666",
-            "Type": "movie",
-            "DVD": "N/A",
-            "BoxOffice": "$292,587,330",
-            "Production": "N/A",
-            "Website": "N/A",
-            "Response": "True"
-        }
+            };
 
-        fetchMovie(query: string): Promise<IProviderResponse> {
-            throw new Error('Method not implemented.');
-        }
+            return providerResponse;
 
+        } catch (error) {
+            console.error('Fehler:', error);
+            throw error;
+        }
+    }
 }

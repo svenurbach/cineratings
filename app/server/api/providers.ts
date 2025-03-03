@@ -2,5 +2,5 @@
 import ProviderService from '../services/ProviderService';
 
 export default defineEventHandler((event) => {
-    return ProviderService.getRegisteredProviders();
+    return ProviderService.getAllAvailableProviders();
  });

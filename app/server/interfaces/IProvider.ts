@@ -1,7 +1,8 @@
 import type { IProviderResponse } from "./IProviderResponse";
 
 export interface IProvider {
-  // providerName: string;
+  providerId: string;
+  providerName: string;
 
   fetchMovie(query: string): Promise<IProviderResponse>
 
