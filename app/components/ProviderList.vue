@@ -1,38 +1,31 @@
-<script lang="ts">
-export default {
-    setup() {
-        const { data, status, error, refresh } = useFetch('/api/providers');
-        const selectedProviders = ref<Set<string>>(new Set());
+<script setup lang="ts" >
+    const { data, status, error, refresh } = useFetch('/api/providers');
+    const selectedProviders = ref<Set<string>>(new Set());
 
-        const toggleProvider = (provider: string) => {
-            console.log('toggleProvider', selectedProviders);
-            if (selectedProviders.value.has(provider)) {
-                selectedProviders.value.delete(provider);
-            } else {
-                selectedProviders.value.add(provider);
-            }
-        };
+    const toggleProvider = (provider: string) => {
+        console.log('toggleProvider', selectedProviders);
+        if (selectedProviders.value.has(provider)) {
+            selectedProviders.value.delete(provider);
+        } else {
+            selectedProviders.value.add(provider);
+        }
+    };
 
+    // TODO: Hier soll die Liste der ausgewählten Provider in den LocalStorage gespeichert werden
+    watch(selectedProviders, (newVal) => {
+        localStorage.setItem('selectedProviders', JSON.stringify(Array.from(newVal)));
+    }, { deep: true });
+    // TODO: Hier soll die Liste der ausgewählten Provider aus dem LocalStorage geladen werden. (Dabei muss sichergestellt werden das die Einträge passen, falls ein Provider entfernt oder hinzugefügt wurde!) 
+    // Dies soll im composable useStoredProviders erfolgen
 
+    onMounted(() => {
+        console.log('Component mounted');
+    });
 
-        
-        return {
-            data,
-            status,
-            error,
-            selectedProviders,
-            toggleProvider
-        };
-    },
-
-    mounted() {
-        console.log('Component mounted')
-    },
-
-    unmounted() {
-        console.log('Component unmounted')
-    },
-}
+    onUnmounted(() => {
+        console.log('Component unmounted');
+    });
+    
 </script>
 
 <template>

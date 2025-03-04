@@ -11,19 +11,41 @@ import { IMovie } from '../interfaces/IMovie';
 
 export default class DataService {
   providerList: string[] = ['tmdb', 'omdb'];
-  movieName: string = 'Inception';
+  // movieName: string = 'Inception';
   aggregatedMovieRating: number = 0.0;
+  static baseProvider: string = 'omdb'; // TODO: Muss dynamisch ermittelt werden
+
   // MovieObject
 
   // getMovieNameFromView
   // setMovieName
-
   // getProviderListFromView
-
-
+  // getBaseProvider(FromProviderFactory)?
+  // getListFromMovieSearchFromBaseProvider
+  // Let User pick movie
+  // setMovieImdbId
+  // searchMovieByImdbId
+  // getMovieObjectFromProviders
   // getAggregatedMovieRating from RatingService
   // setAggregatedMovieRating
 
+
+  static async getMovieListFromBaseProvider(movieName: string) {
+    const provider = ProviderFactory.getProvider(this.baseProvider);
+
+    if (!provider) {
+      console.error(`Kein gültiger Provider gefunden für: ${this.baseProvider}`);
+      return null;
+    }
+
+    try {
+      const response = await provider.searchMovie(movieName);
+      return response;
+    } catch (error) {
+      console.error('Fehler bei der Filmsuche:', error);
+      throw error;
+    }
+  }
 
 
   static async getMovieRatings(movieName: string, providerName: string = 'omdb') {

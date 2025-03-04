@@ -1,12 +1,10 @@
 // Durchsicht den Ordner Providers nach Provider-Dateien und gibt sie aus.
 
 import fs from 'fs';
-import IProvider from '../interfaces/IProvider';
-
 
 export default class ProviderRegistry {
 
-    static getAllAvailableProviders() {
+    static async getAllAvailableProviders() {
 
         const appConfig = useAppConfig();
         const providerDirectory = appConfig.providerDirectory;
@@ -17,7 +15,14 @@ export default class ProviderRegistry {
                 const providerName = file.replace('Provider.ts', '');
                 const providerClassName = file.replace('.ts', '');
                 // TODO: Lesbaren Namen der Provider auslesen und mit geben
+                // console.log('Provider Directory:', providerDirectory);
+                // console.log('File:', file);
+                // console.log('Full Path:', `~${providerDirectory}/${file}`);
 
+                // const providerModule = import(`~${providerDirectory}/${file}`);
+                // providerModule.then((module) => {
+                //     console.log(module.default.providerName);
+                // });
                 providers[providerName] = {
                     providerName: providerName,
                     providerClassName: providerClassName

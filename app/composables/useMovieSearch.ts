@@ -1,16 +1,17 @@
 import DataService from '../server/services/DataService';
-import type { IProviderResponse } from '../server/interfaces/IProviderResponse';
+import type { IMovie } from '~/server/interfaces/IMovie';
 
 export function useMovieSearch() {
     const query = ref('');
-    const movie = ref<IProviderResponse | null>(null);
+    const movies = ref<IMovie[] | null>(null);
 
     async function searchMovie() {
         if (!query.value) return;
 
         try {
-            const response = await DataService.getMovieRatings(query.value);
-            movie.value = response;
+            const response = await DataService.getMovieListFromBaseProvider(query.value);
+            movies.value = response;
+            console.log('useMovieSearch->searchMovie->query:', query.value);
         } catch (error) {
             console.error('Fehler beim Abrufen der Filme:', error);
         }
@@ -18,7 +19,7 @@ export function useMovieSearch() {
 
     return {
         query,
-        movie,
+        movies,
         searchMovie
     };
 }

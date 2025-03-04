@@ -1,0 +1,2 @@
+// TODO: Hier soll die Liste der ausgewählten Provider in den LocalStorage gespeichert werden
+// TODO: Hier soll die Liste der ausgewählten Provider aus dem LocalStorage geladen werden. Dabei muss sichergestellt werden das die Einträge passen, falls ein Provider entfernt oder hinzugefügt wurde! 

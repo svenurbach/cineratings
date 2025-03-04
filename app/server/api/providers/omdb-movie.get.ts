@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 	const apiKey = config.omdbApiKey;
 
 	const query = getQuery(event);
-	const searchQuery = query.query;
+	const imdbId = query.query as string;
 
 	const exampleResponse =
 	{
@@ -47,6 +47,31 @@ export default defineEventHandler(async (event) => {
 		"Response": "True"
 	};
 
-	return exampleResponse;
+	if (!imdbId) {
+		throw createError({
+			statusCode: 400,
+			statusMessage: 'Query parameter is required'
+		});
+	}
+
+	const url = `http://www.omdbapi.com/?apikey=${apiKey}&i=${encodeURIComponent(imdbId)}`;
+	const options = {
+		method: 'GET',
+		headers: {
+			accept: 'application/json'
+		}
+	};
+
+	const response = await fetch(url, options);
+
+	if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
+
+	const data = await response.json();
+
+	return data;
+
+
+
+	// return exampleResponse;
 
 });

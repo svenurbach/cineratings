@@ -1,7 +1,8 @@
 export interface IMovie {
-    imdbId: string;
     title: string;
     releaseDate: string;
+    imdbId: string;
+    posterUrl: string | null;
     // regisseur: string;
     // schauspieler: string;
     // genre: string;

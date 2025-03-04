@@ -5,7 +5,7 @@ export interface IProviderResponse {
   providerName: string; // "The Movie Database"
   providerLogo: string | null;
   providerUrl: string;
-  primaryRating: number;
-  userRating: number;
+  primaryRating: string;
+  userRating: string | null;
   movie: IMovie;
 }
