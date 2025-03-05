@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint'],
   tailwindcss: {
+    cssPath: 'assets/css/tailwind.css',
     exposeConfig: true,
     viewer: true,
     editorSupport: true,

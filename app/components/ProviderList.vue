@@ -29,8 +29,8 @@
 </script>
 
 <template>
-    <div id="provider-list" class="border border-solid border-black">
-        <h3 class="text-lg font-bold">Anbieterliste</h3>
+    <section id="provider-list" class="border border-solid border-black">
+        <h3>Anbieterliste</h3>
         <div class="p-2">
             <div v-if="status === 'pending'">Loading...</div>
             <div v-else-if="error">Error loading providers</div>
@@ -46,5 +46,5 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </section>
 </template>
