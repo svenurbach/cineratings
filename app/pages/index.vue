@@ -1,6 +1,8 @@
 <template>
   <div>
-    <ProviderList />
-    <WelcomeText />
+    <!-- <ProviderList /> -->
+    <template v-if="$route.path === '/'">
+      <WelcomeText />
+    </template>
   </div>
 </template>

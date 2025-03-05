@@ -26,13 +26,13 @@ export default class OmdbProvider implements IProvider {
             }));
 
             // durchsuche die values und ersetze das pattern "N/A" durch null
-            for (const value of Object.values(movies)) {
-                for (const key in value) {
-                    if (value[key] === 'N/A') {
-                        value[key] = null;
-                    }
-                }
-            }
+            // for (const value of Object.values(movies)) {
+            //     for (const key in value) {
+            //         if (value[key] === 'N/A') {
+            //             value[key] = null;
+            //         }
+            //     }
+            // }
             console.log('OMDB Provider: searchMovie->movies:', movies);
             return movies;
 
