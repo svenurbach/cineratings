@@ -1,6 +1,7 @@
-// Schnittstelle welcher sich von ProviderRegistry die verfügbaren Provider holt
+// Route welche sich von ProviderRegistry die verfügbaren Provider holt
 import ProviderService from '../services/ProviderService';
 
-export default defineEventHandler((event) => {
-    return ProviderService.getAllAvailableProviders();
+export default defineEventHandler((_event) => {
+    const providers = ProviderService.getAllProvidersFromFactory();  
+    return providers;
  });

@@ -8,7 +8,7 @@ export function useFetchMovie() {
         if (!imdbId) throw new Error('Query cannot be empty');
 
         try {
-            const response = await DataService.getMovieRatings(imdbId);
+            const response = await DataService.getMovieDataFromProviders(imdbId);
             movie.value = response;
             console.log('useFetchMovie->getMovie->imdbId:', imdbId);
         } catch (error) {

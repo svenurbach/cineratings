@@ -1,6 +1,7 @@
 // Durchsicht den Ordner Providers nach Provider-Dateien und gibt sie aus.
 
 import fs from 'fs';
+import ProviderFactory from '../factories/ProviderFactory';
 
 export default class ProviderRegistry {
 
@@ -30,6 +31,13 @@ export default class ProviderRegistry {
             }
         });
 
+        return providers;
+    }
+
+    static getAllProvidersFromFactory() {
+        const providerFactory = new ProviderFactory();
+        const providers = providerFactory.createAllProviders();
+        console.log('getAllProvidersFromFactory', providers);
         return providers;
     }
 }

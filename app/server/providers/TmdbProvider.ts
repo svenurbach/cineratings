@@ -1,63 +1,55 @@
 // Hier sollen die Daten eines bestimmten Films beim Provider TMDB abgefragt und zurückgegeben werden.
+import type { IMovie } from '../interfaces/IMovie';
 import type { IProvider } from '../interfaces/IProvider';
 import type { IProviderResponse } from '../interfaces/IProviderResponse';
 
 export default class TmdbProvider implements IProvider {
     readonly providerId = 'tmdb';
-    readonly providerName = 'The Movie Database';
+    readonly providerName = 'The Movie Database (TMDB)';
     readonly providerLogo = 'https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg';
     readonly providerUrl = "https://www.themoviedb.org/";
-    
-    private config;
-    private options;
 
-    constructor() {
-        this.config = useRuntimeConfig();
-        this.options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                // Authorization: `Bearer ${this.config.tmdbBearerToken}`
-            }
-        };
+    searchMovie(query: string): Promise<IMovie[]> {
+        throw new Error('Method not implemented.');
     }
 
-    async fetchMovie(query: string): Promise<IProviderResponse>{
+    async fetchMovie(query: string): Promise<IProviderResponse> {
         try {
-        //     const response = await fetch(
-        //         `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=1`,
-        //         this.options
-        //     );
+            // Interne Server Route aufrufen. Token ist dort hinterlegt.
+            const response = await $fetch(`api/providers/omdb-movie`, {
+                query: { query }
+            });
 
-        //     if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
+            // Check if more than one result was returned
+            // If so, return a list of movies to the view and let the user choose one
+            // Make a id search with the users choice
 
-        //     const data = await response.json();
-        //     const movie = data.results[0];
+            // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
+            const movieData = response as { Metascore: string, imdbID: string, Title: string, Year: string, Poster: string };
 
-        //     if (!movie) throw new Error('Kein Film gefunden');
+            if (!movieData) throw new Error('No movie found');
 
-        //     const providerResponse: IProviderResponse = {
-        //         providerId: movie.id,
-        //         providerName: movie.title,
-        //         providerLogo: movie.release_date,
-        //         providerUrl: movie.vote_average
-        //     };
+            if (import.meta.server) {
+                console.log("Dieser Code läuft auf dem Server.");
+            }
 
-        if (import.meta.server) {
-        console.log("Dieser Code läuft auf dem Server.");
-        }
-        
-        if (import.meta.client) {
-        console.log("Dieser Code läuft im Client.");
-        }
-          
+            if (import.meta.client) {
+                console.log("Dieser Code läuft im Client.");
+            }
+
             const providerResponse: IProviderResponse = {
                 providerId: this.providerId,
                 providerName: this.providerName,
                 providerLogo: this.providerLogo,
                 providerUrl: this.providerUrl,
-                primaryRating: 8.1,
-                userRating: 9.3
+                primaryRating: movieData.Metascore,
+                userRating: null,
+                movie: {
+                    imdbId: movieData.imdbID,
+                    title: movieData.Title,
+                    releaseDate: movieData.Year,
+                    posterUrl: movieData.Poster
+                }
             };
 
             return providerResponse;

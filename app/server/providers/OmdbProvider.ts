@@ -6,7 +6,7 @@ import type { IProviderResponse } from '../interfaces/IProviderResponse';
 export default class OmdbProvider implements IProvider {
     readonly baseProvider = true; // TODO: Testing: Es darf nur einen base provider geben.
     readonly providerId = 'omdb';
-    readonly providerName = 'Open Media Database';
+    readonly providerName = 'Open Media Database API';
     readonly providerLogo = null;
     readonly providerUrl = "https://www.omdbapi.com/";
 
