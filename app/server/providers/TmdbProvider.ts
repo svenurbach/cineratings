@@ -1,7 +1,6 @@
 // Hier sollen die Daten eines bestimmten Films beim Provider TMDB abgefragt und zurückgegeben werden.
 import type { IMovie } from '../interfaces/IMovie';
 import type { IProvider } from '../interfaces/IProvider';
-import type { IProviderResponse } from '../interfaces/IProviderResponse';
 
 export default class TmdbProvider implements IProvider {
     readonly providerId = 'tmdb';
@@ -13,19 +12,21 @@ export default class TmdbProvider implements IProvider {
         throw new Error('Method not implemented.');
     }
 
-    async fetchMovie(query: string): Promise<IProviderResponse> {
+    async fetchMovie(query: string) {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
-            const response = await $fetch(`api/providers/omdb-movie`, {
+            const response = await $fetch(`api/providers/tmdb`, {
                 query: { query }
             });
-
+            console.log('TMDB Provider: fetchMovie->response:', response);
+            
             // Check if more than one result was returned
             // If so, return a list of movies to the view and let the user choose one
             // Make a id search with the users choice
 
             // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
-            const movieData = response as { Metascore: string, imdbID: string, Title: string, Year: string, Poster: string };
+            const movieData = response as { vote_average: number, imdbID: string, title: string, release_date: string, poster_path: string, vote_count: number };
+            // PATTERN MUSS ZUM CUSTOM RESPONSE PASSEN! Auch die Typen!
 
             if (!movieData) throw new Error('No movie found');
 
@@ -37,19 +38,20 @@ export default class TmdbProvider implements IProvider {
                 console.log("Dieser Code läuft im Client.");
             }
 
-            const providerResponse: IProviderResponse = {
-                providerId: this.providerId,
-                providerName: this.providerName,
-                providerLogo: this.providerLogo,
-                providerUrl: this.providerUrl,
-                primaryRating: movieData.Metascore,
-                userRating: null,
-                movie: {
-                    imdbId: movieData.imdbID,
-                    title: movieData.Title,
-                    releaseDate: movieData.Year,
-                    posterUrl: movieData.Poster
-                }
+            const providerResponse: IMovie = {
+                title: movieData.title,
+                releaseDate: movieData.release_date,
+                imdbId: query,
+                posterUrl: movieData.poster_path,
+                providers: [{
+                    providerId: this.providerId,
+                    providerName: this.providerName,
+                    providerLogo: this.providerLogo,
+                    providerUrl: this.providerUrl,
+                    primaryRating: null,
+                    userRating: movieData.vote_average.toString(),
+                    userVotes: movieData.vote_count.toString()
+                }]
             };
 
             return providerResponse;

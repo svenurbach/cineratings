@@ -1,7 +1,6 @@
 // Hier sollen die Daten eines bestimmten Films beim Provider OMDB abgefragt und zurückgegeben werden.
 import type { IMovie } from '../interfaces/IMovie';
 import type { IProvider } from '../interfaces/IProvider';
-import type { IProviderResponse } from '../interfaces/IProviderResponse';
 
 export default class OmdbProvider implements IProvider {
     readonly baseProvider = true; // TODO: Testing: Es darf nur einen base provider geben.
@@ -22,7 +21,8 @@ export default class OmdbProvider implements IProvider {
                 title: movie.Title,
                 releaseDate: movie.Year,
                 imdbId: movie.imdbID,
-                posterUrl: movie.Poster
+                posterUrl: movie.Poster,
+                providers: []
             }));
 
             // durchsuche die values und ersetze das pattern "N/A" durch null
@@ -58,19 +58,20 @@ export default class OmdbProvider implements IProvider {
 
             if (!movieData) throw new Error('No movie found');
 
-            const providerResponse: IProviderResponse = {
-                providerId: this.providerId,
-                providerName: this.providerName,
-                providerLogo: this.providerLogo,
-                providerUrl: this.providerUrl,
-                primaryRating: movieData.Metascore,
-                userRating: null,
-                movie: {
-                    imdbId: movieData.imdbID,
-                    title: movieData.Title,
-                    releaseDate: movieData.Year,
-                    posterUrl: movieData.Poster
-                }
+            const providerResponse: IMovie = {
+                title: movieData.Title,
+                releaseDate: movieData.Year,
+                imdbId: movieData.imdbID,
+                posterUrl: movieData.Poster,
+                providers: [{
+                    providerId: this.providerId,
+                    providerName: this.providerName,
+                    providerLogo: this.providerLogo,
+                    providerUrl: this.providerUrl,
+                    primaryRating: movieData.Metascore,
+                    userRating: null,
+                    userVotes: null
+                }]
             };
 
             return providerResponse;

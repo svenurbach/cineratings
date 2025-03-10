@@ -1,11 +1,9 @@
-import type { IMovie } from "./IMovie";
-
 export interface IProviderResponse {
   providerId: string;  // "tmdb"
   providerName: string; // "The Movie Database"
-  providerLogo: string | null;
   providerUrl: string;
-  primaryRating: string;
+  providerLogo: string | null;
+  primaryRating: string | null;
   userRating: string | null;
-  movie: IMovie;
+  userVotes: string | null;
 }

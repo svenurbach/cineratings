@@ -7,8 +7,7 @@
 // Gebe die Filmdaten zurück
 
 import ProviderFactory from '../factories/ProviderFactory';
-import { IMovie } from '../interfaces/IMovie';
-import { IProvider } from '../interfaces/IProvider';
+import type { IMovie } from '../interfaces/IMovie';
 
 export default class DataService {
   providerList: string[] = ['tmdb', 'omdb'];
@@ -20,13 +19,14 @@ export default class DataService {
 
   // getMovieNameFromView
   // setMovieName
-  // 
   // getBaseProvider(FromProviderFactory)?
-  // getListFromMovieSearchFromBaseProvider
+
+  // +++getMovieListFromBaseProvider
+
   // Let User pick movie
   // setMovieImdbId
-  // searchMovieByImdbId
-  // getMovieObjectFromProviders
+  // searchMovieByImdbId??????
+  // +++getMovieDataFromProviders
   // getAggregatedMovieRating from RatingService
   // setAggregatedMovieRating
 
@@ -59,37 +59,51 @@ export default class DataService {
     return providers;
   }
 
-  static async getMovieDataFromProviders(title: string) {
-    const movieTitle = title;
+  // ################################################################ EINSTIEG ################################################################
+  static async getMovieDataFromProviders(imdbId: string) {
+    const movieTitle = imdbId;
     const providers = this.getSelectedProvidersFromFactory();
-    console.log("getMovieDataFromProviders", providers);
+    const movieData: IMovie =
+    {
+      title: '',
+      releaseDate: '',
+      imdbId: '',
+      posterUrl: '',
+      providers: []
+    }; // ADD2DOKU (as IMovie)
 
-    // Object.keys(provider).forEach(async key => {
-    //   const response = await provider[key].searchMovie(movieName);
-    // });
+    const providerResponses = await Promise.all(
+      Object.keys(providers).map(async key => {
+        try {
+          // CHECK if imdbId is correct
+          // CHECK if year is correct +-1?
+          return await providers[key].fetchMovie(movieTitle);
+        } catch (error) {
+          console.error(`Fehler bei der Filmsuche mit Provider ${key}:`, error);
+          return null;
+        }
+      })
+    );
+    console.log("getMovieDataFromProviders->providerResponses", providerResponses);
 
+    // müssen vom baseprovider kommen
+    if (providerResponses[0]) {
+      movieData.title = providerResponses[0].title;
+      movieData.releaseDate = providerResponses[0].releaseDate;
+      movieData.imdbId = providerResponses[0].imdbId;
+      movieData.posterUrl = providerResponses[0].posterUrl;
+    }
+    providerResponses.forEach(provider => {
+      if (provider) {
+        movieData.providers.push(provider.providers[0]);
+      }
+    });
 
-
-    // const results = [];
-
-    // for (const provider of providers) {
-    //   provider = ProviderFactory.getProviders(providers);
-
-    //   if (!provider) {
-    //     console.error(`Kein gültiger Provider gefunden für: ${providers}`);
-    //     continue;
-    //   }
-
-    //   try {
-    //     const response = await provider.fetchMovie(movieName);
-    //     results.push(response);
-    //   } catch (error) {
-    //     console.error(`Fehler bei der Filmsuche mit Provider ${providers}:`, error);
-    //   }
-    // }
-
-    return null;
+    console.log("getMovieDataFromProviders->movieData", movieData);
+    return movieData;
   }
+
+  
 
   static async getMovieRatingsFromCache(movieName: string) {
     return null;
