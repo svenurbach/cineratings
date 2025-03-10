@@ -11,9 +11,7 @@ onMounted(() => {
 <template>
   <!-- Filmergebnisse anzeigen -->
   <section v-if="movie" class="mt-4">
-    <button @click="$router.back()">
-    Zurück
-    </button>
+    <button @click="$router.back()">Zurück</button>
     <div class="my-2 p-2 border border-solid border-black">
       <h3>Filmdaten</h3>
       <div class="flex flex-col p-2">
@@ -25,20 +23,11 @@ onMounted(() => {
 
     <div class="my-2 p-2 border border-solid border-black">
       <h3 class="text-lg font-bold">Anbieter</h3>
-      <div v-for="provider in movie.providers" :key="provider.providerId" class="p-2 border-b">
-        <div v-if="provider.providerLogo">
-          {{ provider.providerName }}
-          <a :href="provider.providerUrl"><img class="w-20" :src="provider.providerLogo"></a>
-        </div>
-        <div v-else>
-          <a :href="provider.providerUrl">{{ provider.providerName }}</a>
-        </div>
-        <div v-if="provider.primaryRating">Primary-Rating: {{ provider.primaryRating }}</div>
-        <template v-if="provider.userRating">
-          <div>User-Rating: {{ provider.userRating }}</div>
-          <div>User-Votes: {{ provider.userVotes }}</div>
-        </template>
-      </div>
+      <ProviderBox
+        v-for="provider in movie.providers" 
+        :key="provider.providerId" 
+        :data="provider"
+        class="p-2 border-b" />
     </div>
 
     <div class="my-2 p-2 border border-solid border-black">
