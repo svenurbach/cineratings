@@ -16,24 +16,17 @@ export default class OmdbProvider implements IProvider {
                 query: { query }
             });
 
+            // TODO: Assertion nicht typ sicher. Nochmal prüfen
             const data = response as { Search: { Title: string; Year: string, imdbID: string; Poster: string }[] };
-            const movies = data.Search.map((movie: { Title: string; Year: string, imdbID: string; Poster: string }) => ({
+            const movies = data.Search.map((movie) => ({
                 title: movie.Title,
                 releaseDate: movie.Year,
                 imdbId: movie.imdbID,
-                posterUrl: movie.Poster,
+                posterUrl: movie.Poster !== 'N/A' ? movie.Poster : null,
                 provider: null,
                 providers: []
             }));
 
-            // durchsuche die values und ersetze das pattern "N/A" durch null
-            // for (const value of Object.values(movies)) {
-            //     for (const key in value) {
-            //         if (value[key] === 'N/A') {
-            //             value[key] = null;
-            //         }
-            //     }
-            // }
             console.log('OMDB Provider: searchMovie->movies:', movies);
             return movies;
 
@@ -76,6 +69,8 @@ export default class OmdbProvider implements IProvider {
                 providers: []
             };
 
+            // TODO: Values mit N/A ersetzen durch null
+            
             return providerResponse;
 
         } catch (error) {
@@ -83,6 +78,5 @@ export default class OmdbProvider implements IProvider {
             throw error;
         }
     }
-
-
+    
 }
