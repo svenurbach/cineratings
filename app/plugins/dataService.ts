@@ -5,5 +5,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     // TODO: Abhängigkeiten übergeben. Z.B. ProviderFactory
     // DataService als Singleton
     const dataService = new DataService();
-    nuxtApp.provide('dataService', dataService as DataService);
+    nuxtApp.provide('dataService', dataService);
 });

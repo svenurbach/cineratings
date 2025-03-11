@@ -9,6 +9,7 @@
 import ProviderFactory from '../factories/ProviderFactory';
 import type { IMovie } from '../interfaces/IMovie';
 import type { IProvider } from '../interfaces/IProvider';
+import RatingService from './RatingService';
 
 export default class DataService {
   providerList: string[] = ['tmdb', 'omdb'];
@@ -32,7 +33,7 @@ export default class DataService {
   // setAggregatedMovieRating
 
 
-  async getMovieListFromBaseProvider(movieName: string): Promise<IMovie[] | null> {
+  private async getMovieListFromBaseProvider(movieName: string): Promise<IMovie[] | null> {
     const provider = ProviderFactory.createProviders([this.baseProvider]);
     const firstKey = Object.keys(provider)[0];
     console.log("getMovieListFromBaseProvider", provider);
@@ -64,10 +65,14 @@ export default class DataService {
   private async getMovieData(imdbId: string) {
     const providers = this.getSelectedProvidersFromFactory();
     const providerResponses = await this.getMovieRatingsFromProviders(imdbId, providers);
+    console.log("getMovieDataFromProviders->movieData", providerResponses);
 
     const movieData = this.buildMovieObject(providerResponses);
+    console.log("buildMovieObject->movieData", movieData);
+    
+    movieData.providers.push(this.getAggregatedMovieRating(movieData));
+    console.log("getAggregatedMovieRating->movieData", movieData);
 
-    console.log("getMovieDataFromProviders->movieData", movieData);
     return movieData;
   }
 
@@ -138,6 +143,10 @@ export default class DataService {
   // TODO: Cache implementieren
   private async getMovieRatingsFromCache(movieName: string) {
     return null;
+  }
+
+  private getAggregatedMovieRating(movieData: IMovie) {
+    return RatingService.buildCustomProviderRating(movieData);
   }
 
 }
