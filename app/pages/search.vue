@@ -25,17 +25,17 @@ const redirectToMovieDetails = (movieId: string) => {
     <section v-if="movies" class="mt-4">
         <h2 class="text-lg font-bold">Suchergebnisse für: "{{ param }}"</h2>
         <p>Bitte einen Film auswählen!</p>
-        <ul class="grid grid-cols-3 gap-4 mt-4">
-            <!-- TODO: Make gallery more responsive -->
-            <li v-for="movie in movies" :key="movie.imdbId" class="grid grid-rows-4 cursor-pointer bg-zinc-200 rounded-lg" @click="redirectToMovieDetails(movie.imdbId)">
-                <div class="row-span-3">
+        <ul class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+            <!-- TODO: Fix text h position -->
+            <li v-for="movie in movies" :key="movie.imdbId" class="grid cursor-pointer overflow-hidden bg-zinc-200 rounded-lg hover:sepia" @click="redirectToMovieDetails(movie.imdbId)">
+                <div class="">
                     <img 
                         :src="movie.posterUrl || 'images/poster-placeholder.jpg'" 
                         :alt="`${movie.title}-Poster`" 
                         :title="movie.title"
-                        class="max-w-full h-full object-cover rounded-t-lg">
+                        class="w-full aspect-[2/3] object-cover rounded-t-lg">
                 </div>
-                <div class="flex flex-col p-2 row-span-1">
+                <div class="p-2">
                     <span class="font-bold text-sm line-clamp-2 leading-4">{{ movie.title }}</span>
                     <span class="text-xs leading-5">{{ movie.releaseDate }}</span>
                 </div>
