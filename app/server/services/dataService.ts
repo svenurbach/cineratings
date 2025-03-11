@@ -14,7 +14,7 @@ export default class DataService {
   providerList: string[] = ['tmdb', 'omdb'];
   // movieName: string = 'Inception';
   aggregatedMovieRating: number = 0.0;
-  static baseProvider: string = 'omdb'; // TODO: Muss dynamisch ermittelt werden
+  baseProvider: string = 'omdb'; // TODO: Muss dynamisch ermittelt werden
 
   // MovieObject
 
@@ -32,7 +32,7 @@ export default class DataService {
   // setAggregatedMovieRating
 
 
-  static async getMovieListFromBaseProvider(movieName: string): Promise<IMovie[] | null> {
+  async getMovieListFromBaseProvider(movieName: string): Promise<IMovie[] | null> {
     const provider = ProviderFactory.createProviders([this.baseProvider]);
     const firstKey = Object.keys(provider)[0];
     console.log("getMovieListFromBaseProvider", provider);
@@ -49,29 +49,29 @@ export default class DataService {
     }
   }
 
-  static getProviderListFromView() {
+  private getProviderListFromView() {
     // TODO: Get Provider List from LocalStorage
     return ['omdb', 'tmdb'];
   }
 
-  static getSelectedProvidersFromFactory() {
+  private getSelectedProvidersFromFactory() {
     const selectedProviders = this.getProviderListFromView();
     const providers = ProviderFactory.createProviders(selectedProviders);
     return providers;
   }
 
   // ####################### EINSTIEG #######################
-  static async getMovieData(imdbId: string) {
+  private async getMovieData(imdbId: string) {
     const providers = this.getSelectedProvidersFromFactory();
-    const providerResponses = await DataService.getMovieRatingsFromProviders(imdbId, providers);
+    const providerResponses = await this.getMovieRatingsFromProviders(imdbId, providers);
 
-    const movieData = DataService.buildMovieObject(providerResponses);
+    const movieData = this.buildMovieObject(providerResponses);
 
     console.log("getMovieDataFromProviders->movieData", movieData);
     return movieData;
   }
 
-  static buildMovieObject(providerResponses: IMovie[]): IMovie {
+  private buildMovieObject(providerResponses: IMovie[]): IMovie {
     let movie: IMovie =
     {
       title: '',
@@ -82,16 +82,16 @@ export default class DataService {
       providers: []
     }; // ADD2DOKU (as IMovie)
 
-    const updatedMovie = DataService.setMovieDetailsFromBaseProvider(this.baseProvider, movie, providerResponses);
+    const updatedMovie = this.setMovieDetailsFromBaseProvider(this.baseProvider, movie, providerResponses);
     if (updatedMovie) {
       movie = updatedMovie;
     }
-    movie = DataService.addProviderRatingsToMovie(movie, providerResponses);
+    movie = this.addProviderRatingsToMovie(movie, providerResponses);
 
     return movie;
   }
 
-  static setMovieDetailsFromBaseProvider(baseProviderName: string, movie: IMovie, providerResponses: IMovie[]): IMovie | null {
+  private setMovieDetailsFromBaseProvider(baseProviderName: string, movie: IMovie, providerResponses: IMovie[]): IMovie | null {
     // finde in den providerrepsonsees den baseprovider anhand des keys
     const baseProviderData = providerResponses.find(movie => movie.provider && movie.provider.providerId === baseProviderName);
 
@@ -107,7 +107,7 @@ export default class DataService {
     return movie;
   }
 
-  static addProviderRatingsToMovie(movie: IMovie, providerResponses: IMovie[]) {
+  private addProviderRatingsToMovie(movie: IMovie, providerResponses: IMovie[]) {
     providerResponses.forEach(provider => {
       if (provider) {
         movie.providers.push(provider.provider);
@@ -116,7 +116,7 @@ export default class DataService {
     return movie;
   }
 
-  static async getMovieRatingsFromProviders(imdbId: string, providers: { [key: string]: IProvider }): Promise<(IMovie | null)[]> {
+  private async getMovieRatingsFromProviders(imdbId: string, providers: { [key: string]: IProvider }): Promise<(IMovie | null)[]> {
     const providerResponses = await Promise.all(
       Object.keys(providers).map(async key => {
         try {
@@ -136,7 +136,7 @@ export default class DataService {
   }
 
   // TODO: Cache implementieren
-  static async getMovieRatingsFromCache(movieName: string) {
+  private async getMovieRatingsFromCache(movieName: string) {
     return null;
   }
 
