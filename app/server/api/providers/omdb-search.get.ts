@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 		});
 	}
 
-	const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(movieName)}`;
+	const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(movieName)}&type=movie`;
 	const options = {
 		method: 'GET',
 		headers: {
