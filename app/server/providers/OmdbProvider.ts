@@ -22,6 +22,7 @@ export default class OmdbProvider implements IProvider {
                 releaseDate: movie.Year,
                 imdbId: movie.imdbID,
                 posterUrl: movie.Poster,
+                provider: null,
                 providers: []
             }));
 
@@ -63,7 +64,7 @@ export default class OmdbProvider implements IProvider {
                 releaseDate: movieData.Year,
                 imdbId: movieData.imdbID,
                 posterUrl: movieData.Poster,
-                providers: [{
+                provider: {
                     providerId: this.providerId,
                     providerName: this.providerName,
                     providerLogo: this.providerLogo,
@@ -71,7 +72,8 @@ export default class OmdbProvider implements IProvider {
                     primaryRating: movieData.Metascore,
                     userRating: null,
                     userVotes: null
-                }]
+                },
+                providers: []
             };
 
             return providerResponse;

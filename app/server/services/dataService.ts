@@ -8,6 +8,7 @@
 
 import ProviderFactory from '../factories/ProviderFactory';
 import type { IMovie } from '../interfaces/IMovie';
+import type { IProvider } from '../interfaces/IProvider';
 
 export default class DataService {
   providerList: string[] = ['tmdb', 'omdb'];
@@ -31,7 +32,7 @@ export default class DataService {
   // setAggregatedMovieRating
 
 
-  static async getMovieListFromBaseProvider(movieName: string) {
+  static async getMovieListFromBaseProvider(movieName: string): Promise<IMovie[] | null> {
     const provider = ProviderFactory.createProviders([this.baseProvider]);
     const firstKey = Object.keys(provider)[0];
     console.log("getMovieListFromBaseProvider", provider);
@@ -59,60 +60,84 @@ export default class DataService {
     return providers;
   }
 
-  // ################################################################ EINSTIEG ################################################################
-  static async getMovieDataFromProviders(imdbId: string) {
-    const movieTitle = imdbId;
+  // ####################### EINSTIEG #######################
+  static async getMovieData(imdbId: string) {
     const providers = this.getSelectedProvidersFromFactory();
-    const movieData: IMovie =
+    const providerResponses = await DataService.getMovieRatingsFromProviders(imdbId, providers);
+
+    const movieData = DataService.buildMovieObject(providerResponses);
+
+    console.log("getMovieDataFromProviders->movieData", movieData);
+    return movieData;
+  }
+
+  static buildMovieObject(providerResponses: IMovie[]): IMovie {
+    let movie: IMovie =
     {
       title: '',
       releaseDate: '',
       imdbId: '',
       posterUrl: '',
+      provider: null,
       providers: []
     }; // ADD2DOKU (as IMovie)
 
+    const updatedMovie = DataService.setMovieDetailsFromBaseProvider(this.baseProvider, movie, providerResponses);
+    if (updatedMovie) {
+      movie = updatedMovie;
+    }
+    movie = DataService.addProviderRatingsToMovie(movie, providerResponses);
+
+    return movie;
+  }
+
+  static setMovieDetailsFromBaseProvider(baseProviderName: string, movie: IMovie, providerResponses: IMovie[]): IMovie | null {
+    // finde in den providerrepsonsees den baseprovider anhand des keys
+    const baseProviderData = providerResponses.find(movie => movie.provider && movie.provider.providerId === baseProviderName);
+
+    if (!baseProviderData) {
+      console.warn(`BaseProvider nicht gefunden: ${baseProviderName}`);
+      return null;
+    }
+
+    movie.title = baseProviderData.title;
+    movie.releaseDate = baseProviderData.releaseDate;
+    movie.imdbId = baseProviderData.imdbId;
+    movie.posterUrl = baseProviderData.posterUrl;
+    return movie;
+  }
+
+  static addProviderRatingsToMovie(movie: IMovie, providerResponses: IMovie[]) {
+    providerResponses.forEach(provider => {
+      if (provider) {
+        movie.providers.push(provider.provider);
+      }
+    });
+    return movie;
+  }
+
+  static async getMovieRatingsFromProviders(imdbId: string, providers: { [key: string]: IProvider }): Promise<(IMovie | null)[]> {
     const providerResponses = await Promise.all(
       Object.keys(providers).map(async key => {
         try {
           // CHECK if imdbId is correct
           // CHECK if year is correct +-1?
-          return await providers[key].fetchMovie(movieTitle);
+          return providers[key].fetchMovie(imdbId);
         } catch (error) {
           console.error(`Fehler bei der Filmsuche mit Provider ${key}:`, error);
           return null;
         }
       })
     );
-    console.log("getMovieDataFromProviders->providerResponses", providerResponses);
-
-    // müssen vom baseprovider kommen
-    if (providerResponses[0]) {
-      movieData.title = providerResponses[0].title;
-      movieData.releaseDate = providerResponses[0].releaseDate;
-      movieData.imdbId = providerResponses[0].imdbId;
-      movieData.posterUrl = providerResponses[0].posterUrl;
-    }
-    providerResponses.forEach(provider => {
-      if (provider) {
-        movieData.providers.push(provider.providers[0]);
-      }
-    });
-
-    console.log("getMovieDataFromProviders->movieData", movieData);
-    return movieData;
+    console.log("getMovieRatingsFromProviders->providerResponses", providerResponses);
+    // Filtern von null Werten
+    const validResponses = providerResponses.filter(response => response !== null);
+    return validResponses;
   }
 
-  
-
+  // TODO: Cache implementieren
   static async getMovieRatingsFromCache(movieName: string) {
     return null;
   }
-
-  static async getMovieRatingsFromProvider(movieName: string, providerName: string) {
-    return null;
-  }
-
-
 
 }

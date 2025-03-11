@@ -43,7 +43,7 @@ export default class TmdbProvider implements IProvider {
                 releaseDate: movieData.release_date,
                 imdbId: query,
                 posterUrl: movieData.poster_path,
-                providers: [{
+                provider: {
                     providerId: this.providerId,
                     providerName: this.providerName,
                     providerLogo: this.providerLogo,
@@ -51,7 +51,8 @@ export default class TmdbProvider implements IProvider {
                     primaryRating: null,
                     userRating: movieData.vote_average.toString(),
                     userVotes: movieData.vote_count.toString()
-                }]
+                },
+                providers: []
             };
 
             return providerResponse;

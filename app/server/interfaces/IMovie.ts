@@ -9,5 +9,6 @@ export interface IMovie {
     // regisseur: string;
     // schauspieler: string;
     // genre: string;
+    provider: IProviderResponse | null;
     providers: IProviderResponse[];
 }
