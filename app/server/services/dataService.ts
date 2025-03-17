@@ -7,16 +7,23 @@
 // Gebe die Filmdaten zurück
 
 import ProviderFactory from '../factories/ProviderFactory';
-import type { IMovie } from '../interfaces/IMovie';
-import type { IProvider } from '../interfaces/IProvider';
+import type { CoreProvider } from '../interfaces/CoreProvider';
+import type { Movie } from '../interfaces/Movie';
+import type { Provider } from '../interfaces/Provider';
 import RatingService from './RatingService';
 
 export default class DataService {
-  providerList: string[] = ['tmdb', 'omdb'];
+  ProviderFactory: ProviderFactory;
+  providerList: string[];
+  baseProvider: string;
   // movieName: string = 'Inception';
   aggregatedMovieRating: number = 0.0;
-  baseProvider: string = 'omdb'; // TODO: Muss dynamisch ermittelt werden
 
+  public constructor() {
+    this.ProviderFactory = new ProviderFactory();
+    this.providerList = this.getProviderListFromView(); // Die Liste muss von der Factory kommen und dann mit der View abgeglichen werden
+    this.baseProvider = 'omdb'; // TODO: Muss dynamisch ermittelt werden
+  }
   // MovieObject
 
   // getMovieNameFromView
@@ -33,17 +40,21 @@ export default class DataService {
   // setAggregatedMovieRating
 
 
-  private async getMovieListFromBaseProvider(movieName: string): Promise<IMovie[] | null> {
-    const provider = ProviderFactory.createProviders([this.baseProvider]);
-    const firstKey = Object.keys(provider)[0];
-    console.log("getMovieListFromBaseProvider", provider);
-    if (!provider) {
+  private async getMovieListFromBaseProvider(movieName: string): Promise<Movie[] | null> {
+    const providers: CoreProvider[] = ProviderFactory.createProviders([this.baseProvider]);
+    console.log("getMovieListFromBaseProvider", providers);
+
+    if (!providers) {
       console.error(`Kein gültiger Provider gefunden für: ${this.baseProvider}`);
       return null;
     }
+
+    const baseProvider = providers[0];
+
     try {
-      const response = await provider[firstKey].searchMovie(movieName);
+      const response = await baseProvider.searchMovie(movieName);
       return response;
+
     } catch (error) {
       console.error('Fehler bei der Filmsuche:', error);
       throw error;
@@ -62,32 +73,31 @@ export default class DataService {
   }
 
   // ####################### EINSTIEG #######################
-  private async getMovieData(imdbId: string) {
+  private async getMovieData(imdbId: string): Promise<Movie> {
     const providers = this.getSelectedProvidersFromFactory();
     const providerResponses = await this.getMovieRatingsFromProviders(imdbId, providers);
     console.log("getMovieDataFromProviders->movieData", providerResponses);
 
     const movieData = this.buildMovieObject(providerResponses);
     console.log("buildMovieObject->movieData", movieData);
-    
+
     movieData.providers.push(this.getAggregatedMovieRating(movieData));
     console.log("getAggregatedMovieRating->movieData", movieData);
 
     return movieData;
   }
 
-  private buildMovieObject(providerResponses: IMovie[]): IMovie {
-    let movie: IMovie =
+  private buildMovieObject(providerResponses: Movie[]): Movie {
+    let movie: Movie =
     {
       title: '',
       releaseDate: '',
       imdbId: '',
       posterUrl: '',
-      provider: null,
       providers: []
-    }; // ADD2DOKU (as IMovie)
+    }; // ADD2DOKU (as Movie)
 
-    const updatedMovie = this.setMovieDetailsFromBaseProvider(this.baseProvider, movie, providerResponses);
+    const updatedMovie = this.setMovieDetailsFromMainProvider(this.baseProvider, movie, providerResponses);
     if (updatedMovie) {
       movie = updatedMovie;
     }
@@ -96,12 +106,12 @@ export default class DataService {
     return movie;
   }
 
-  private setMovieDetailsFromBaseProvider(baseProviderName: string, movie: IMovie, providerResponses: IMovie[]): IMovie | null {
+  private setMovieDetailsFromMainProvider(mainProviderName: string, movie: Movie, providerResponses: Movie[]): Movie | null {
     // finde in den providerrepsonsees den baseprovider anhand des keys
-    const baseProviderData = providerResponses.find(movie => movie.provider && movie.provider.providerId === baseProviderName);
+    const baseProviderData = providerResponses.find(movie => movie.provider && movie.provider.providerId === mainProviderName);
 
     if (!baseProviderData) {
-      console.warn(`BaseProvider nicht gefunden: ${baseProviderName}`);
+      console.warn(`BaseProvider nicht gefunden: ${mainProviderName}`);
       return null;
     }
 
@@ -112,7 +122,7 @@ export default class DataService {
     return movie;
   }
 
-  private addProviderRatingsToMovie(movie: IMovie, providerResponses: IMovie[]) {
+  private addProviderRatingsToMovie(movie: Movie, providerResponses: Movie[]) {
     providerResponses.forEach(provider => {
       if (provider) {
         movie.providers.push(provider.provider);
@@ -121,15 +131,15 @@ export default class DataService {
     return movie;
   }
 
-  private async getMovieRatingsFromProviders(imdbId: string, providers: { [key: string]: IProvider }): Promise<(IMovie | null)[]> {
+  private async getMovieRatingsFromProviders(imdbId: string, providers: Provider[] ): Promise<(Movie | null)[]> {
     const providerResponses = await Promise.all(
-      Object.keys(providers).map(async key => {
+      providers.map(async provider => {
         try {
           // CHECK if imdbId is correct
           // CHECK if year is correct +-1?
-          return providers[key].fetchMovie(imdbId);
+          return provider.fetchMovie(imdbId);
         } catch (error) {
-          console.error(`Fehler bei der Filmsuche mit Provider ${key}:`, error);
+          console.error(`Fehler bei der Filmsuche mit Provider ${provider}:`, error);
           return null;
         }
       })
@@ -145,7 +155,7 @@ export default class DataService {
     return null;
   }
 
-  private getAggregatedMovieRating(movieData: IMovie) {
+  private getAggregatedMovieRating(movieData: Movie) {
     return RatingService.buildCustomProviderRating(movieData);
   }
 

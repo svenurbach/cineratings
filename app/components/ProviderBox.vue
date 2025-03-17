@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IProviderResponse } from '~/server/interfaces/IProviderResponse';
+import type { ProviderResponse } from '~/server/interfaces/ProviderResponse';
 
 defineProps<{
-	data: IProviderResponse;
+	data: ProviderResponse;
 }>()
 </script>
 

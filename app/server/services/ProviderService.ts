@@ -36,8 +36,9 @@ export default class ProviderRegistry {
 
     static getAllProvidersFromFactory() {
         const providerFactory = new ProviderFactory();
-        const providers = providerFactory.createAllProviders();
+        const providers = providerFactory.createAllProvidersFromList();
         console.log('getAllProvidersFromFactory', providers);
         return providers;
     }
+
 }

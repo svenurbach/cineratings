@@ -1,16 +1,15 @@
 // Hier sollen die Daten eines bestimmten Films beim Provider OMDB abgefragt und zurückgegeben werden.
-import type { IMovie } from '../interfaces/IMovie';
-import type { IProvider } from '../interfaces/IProvider';
+import type { CoreProvider } from '../interfaces/CoreProvider';
+import type { Movie } from '../interfaces/Movie';
 
-export default class OmdbProvider implements IProvider {
-    readonly baseProvider = true; // TODO: Testing: Es darf nur einen base provider geben.
+export default class OmdbProvider implements CoreProvider {
+    readonly baseProvider = true; // TODO: Testing: Es darf nur einen base provider geben. #2 check typeOf und remove property!
     readonly providerId = 'omdb';
     readonly providerName = 'Open Media Database API';
-    readonly providerLogo = null;
     readonly providerUrl = "https://www.omdbapi.com/";
 
     // Filmsuche an search api. Zurück kommt eine Liste an Filmen
-    async searchMovie(query: string): Promise<IMovie[]> {
+    async searchMovie(query: string): Promise<Movie[]> {
         try {
             const response = await $fetch(`api/providers/omdb-search`, {
                 query: { query }
@@ -22,8 +21,7 @@ export default class OmdbProvider implements IProvider {
                 title: movie.Title,
                 releaseDate: movie.Year,
                 imdbId: movie.imdbID,
-                posterUrl: movie.Poster !== 'N/A' ? movie.Poster : null,
-                provider: null,
+                posterUrl: movie.Poster !== 'N/A' ? movie.Poster : undefined,
                 providers: []
             }));
 
@@ -52,25 +50,22 @@ export default class OmdbProvider implements IProvider {
 
             if (!movieData) throw new Error('No movie found');
 
-            const providerResponse: IMovie = {
+            const providerResponse: Movie = {
                 title: movieData.Title,
                 releaseDate: movieData.Year,
                 imdbId: movieData.imdbID,
-                posterUrl: movieData.Poster,
+                posterUrl: movieData.Poster !== 'N/A' ? movieData.Poster : undefined,
                 provider: {
                     providerId: this.providerId,
                     providerName: this.providerName,
-                    providerLogo: this.providerLogo,
                     providerUrl: this.providerUrl,
                     primaryRating: movieData.Metascore,
-                    userRating: null,
-                    userVotes: null
                 },
                 providers: []
             };
 
             // TODO: Values mit N/A ersetzen durch null
-            
+
             return providerResponse;
 
         } catch (error) {
@@ -78,5 +73,5 @@ export default class OmdbProvider implements IProvider {
             throw error;
         }
     }
-    
+
 }

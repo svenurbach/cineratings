@@ -1,8 +1,8 @@
-import type { IMovie } from '~/server/interfaces/IMovie';
+import type { Movie } from '~/server/interfaces/Movie';
 
 export function useMovieSearch() {
     const { $dataService } = useNuxtApp();
-    const movies = ref<IMovie[] | null>(null);
+    const movies = ref<Movie[] | null>(null);
 
     async function searchMovie(movieName: string) {
         if (!movieName) throw new Error('Query cannot be empty');

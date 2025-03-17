@@ -1,12 +1,12 @@
 // Bekommt Datan vom dataService
 // Hier möchte ich die zurückgegebenen Daten der Provider, welcher der User, ausgewählt hat verarbeiten.
-import type { IMovie } from '../interfaces/IMovie';
-import type { IProviderResponse } from '../interfaces/IProviderResponse';
+import type { Movie } from '../interfaces/Movie';
+import type { ProviderResponse } from '../interfaces/ProviderResponse';
 
 export default class RatingService {
 
-    static calculateAggregatedMovieRating(movie: IMovie) {
-        // Hier muss ein orderntlicher Algorithmus rein welcher prüft, 
+    static calculateAggregatedMovieRating(movie: Movie) {
+        // Hier muss ein orderntlicher Algorithmus rein welcher prüft,
         // welche ratings vorhanden sind, sie gewichtet und dann auswertet
         let sum = 0;
         let count = 0;
@@ -20,9 +20,9 @@ export default class RatingService {
         return 6.5;
     }
 
-    static buildCustomProviderRating(movie: IMovie): IProviderResponse {
+    static buildCustomProviderRating(movie: Movie): ProviderResponse {
         // TODO: Daten müssen aus der AppConfig kommen
-        const provider: IProviderResponse = {
+        const provider: ProviderResponse = {
             providerId: 'cr',
             providerName: 'CineRatings',
             providerUrl: 'https://www.cineratings.de',
