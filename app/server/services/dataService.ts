@@ -5,24 +5,23 @@
 // Wenn nein, dann hole die Filmdaten vom Provider
 // Speichere die Filmdaten im Cache
 // Gebe die Filmdaten zurück
-
 import ProviderFactory from '../factories/ProviderFactory';
-import type { CoreProvider } from '../interfaces/CoreProvider';
-import type { Movie } from '../interfaces/Movie';
-import type { Provider } from '../interfaces/Provider';
+import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
+import type { MovieRatingData } from '../interfaces/MovieRatingData';
+import type { MovieMetadata } from '../interfaces/MovieMetadata';
 import RatingService from './RatingService';
 
 export default class DataService {
   ProviderFactory: ProviderFactory;
   providerList: string[];
-  baseProvider: string;
+  mainProvider: string;
   // movieName: string = 'Inception';
   aggregatedMovieRating: number = 0.0;
 
   public constructor() {
     this.ProviderFactory = new ProviderFactory();
     this.providerList = this.getProviderListFromView(); // Die Liste muss von der Factory kommen und dann mit der View abgeglichen werden
-    this.baseProvider = 'omdb'; // TODO: Muss dynamisch ermittelt werden
+    this.mainProvider = 'omdb'; // TODO: Muss dynamisch ermittelt werden
   }
   // MovieObject
 
@@ -40,19 +39,18 @@ export default class DataService {
   // setAggregatedMovieRating
 
 
-  private async getMovieListFromBaseProvider(movieName: string): Promise<Movie[] | null> {
-    const providers: CoreProvider[] = ProviderFactory.createProviders([this.baseProvider]);
-    console.log("getMovieListFromBaseProvider", providers);
+  private async getMovieListFromMainProvider(movieName: string): Promise<MovieMetadata[] | null> {
+    const providers = ProviderFactory.createProviders([this.mainProvider]);
 
     if (!providers) {
-      console.error(`Kein gültiger Provider gefunden für: ${this.baseProvider}`);
+      console.error(`Kein gültiger Provider gefunden für: ${this.mainProvider}`);
       return null;
     }
 
-    const baseProvider = providers[0];
+    const mainProvider = providers[0];
 
     try {
-      const response = await baseProvider.searchMovie(movieName);
+      const response = await mainProvider.searchMovie(movieName);
       return response;
 
     } catch (error) {
@@ -73,65 +71,76 @@ export default class DataService {
   }
 
   // ####################### EINSTIEG #######################
-  private async getMovieData(imdbId: string): Promise<Movie> {
+  private async getMovieData(imdbId: string): Promise<MovieRatingData[]> {
     const providers = this.getSelectedProvidersFromFactory();
-    const providerResponses = await this.getMovieRatingsFromProviders(imdbId, providers);
-    console.log("getMovieDataFromProviders->movieData", providerResponses);
+    const movieRatingRecords = await this.getMovieRatingsFromProviders(imdbId, providers);
+    const aggregatedMovieRating = (RatingService.calculateAggregatedMovieRating(movieRatingRecords));
+    const customRatingRecord = this.buildCustomRatingRecord(aggregatedMovieRating, movieRatingRecords);
+    movieRatingRecords.push(customRatingRecord);
+    console.log("movieRatingRecords->customRatingRecord", movieRatingRecords);
 
-    const movieData = this.buildMovieObject(providerResponses);
-    console.log("buildMovieObject->movieData", movieData);
-
-    movieData.providers.push(this.getAggregatedMovieRating(movieData));
-    console.log("getAggregatedMovieRating->movieData", movieData);
-
-    return movieData;
+    return movieRatingRecords;
   }
 
-  private buildMovieObject(providerResponses: Movie[]): Movie {
-    let movie: Movie =
-    {
-      title: '',
-      releaseDate: '',
-      imdbId: '',
-      posterUrl: '',
-      providers: []
-    }; // ADD2DOKU (as Movie)
+  // private buildCustomProviderRating(aggregatedMovieRating: string): MovieRatingData {
+  //   // TODO: Daten müssen aus der AppConfig kommen
+  //   const customMovieRating: MovieRatingData = {
+  //     id: 'cr',
+  //     name: 'CineRatings',
+  //     homepageUrl: 'https://www.cineratings.de',
+  //     primaryRating: aggregatedMovieRating,
+  //     movieMetadata: {
+  //       title: 'empty',
+  //       year: 'empty',
+  //       imdbId: 'empty'
+  //     }
+  //   };
+  //   console.log('buildCustomProviderRating', customMovieRating);
+  //   return customMovieRating;
+  // }
 
-    const updatedMovie = this.setMovieDetailsFromMainProvider(this.baseProvider, movie, providerResponses);
-    if (updatedMovie) {
-      movie = updatedMovie;
-    }
-    movie = this.addProviderRatingsToMovie(movie, providerResponses);
+  private buildCustomRatingRecord(aggregatedMovieRating: string, movieRatingRecords: MovieRatingData[]): MovieRatingData {
+    const { movieMetadata: { title, year, imdbId, posterUrl } } = this.getMovieDetailsFromCoreProvider(this.mainProvider, movieRatingRecords);
 
-    return movie;
-  }
-
-  private setMovieDetailsFromMainProvider(mainProviderName: string, movie: Movie, providerResponses: Movie[]): Movie | null {
-    // finde in den providerrepsonsees den baseprovider anhand des keys
-    const baseProviderData = providerResponses.find(movie => movie.provider && movie.provider.providerId === mainProviderName);
-
-    if (!baseProviderData) {
-      console.warn(`BaseProvider nicht gefunden: ${mainProviderName}`);
-      return null;
-    }
-
-    movie.title = baseProviderData.title;
-    movie.releaseDate = baseProviderData.releaseDate;
-    movie.imdbId = baseProviderData.imdbId;
-    movie.posterUrl = baseProviderData.posterUrl;
-    return movie;
-  }
-
-  private addProviderRatingsToMovie(movie: Movie, providerResponses: Movie[]) {
-    providerResponses.forEach(provider => {
-      if (provider) {
-        movie.providers.push(provider.provider);
+    const customMovieRatingRecord: MovieRatingData = {
+      id: 'cr',
+      name: 'CineRatings',
+      homepageUrl: 'https://www.cineratings.de',
+      primaryRating: aggregatedMovieRating,
+      movieMetadata: {
+        title: title,
+        year: year,
+        imdbId: imdbId,
+        posterUrl: posterUrl
       }
-    });
-    return movie;
+    };
+
+    return customMovieRatingRecord;
   }
 
-  private async getMovieRatingsFromProviders(imdbId: string, providers: Provider[] ): Promise<(Movie | null)[]> {
+  private getMovieDetailsFromCoreProvider(mainProviderName: string, providerResponses: MovieRatingData[]): MovieRatingData {
+    // finde in den providerrepsonsees den baseprovider anhand des keys
+    const mainProviderData = providerResponses.find(p => p.id === mainProviderName);
+
+    if (!mainProviderData) {
+      throw new Error(`MainProvider nicht gefunden: ${mainProviderName}`);
+    }
+
+    return mainProviderData;
+  }
+
+  // private addProviderRatingsToMovie(movie: Movie, providerResponses: Movie[]) {
+  //   if (movie.providers) {
+  //     providerResponses.forEach(item => {
+  //       if (item.provider) {
+  //         movie.providers.push(item.provider);
+  //       }
+  //     });
+  //   }
+  //   return movie;
+  // }
+
+  private async getMovieRatingsFromProviders(imdbId: string, providers: MovieRatingProvider[]): Promise<(MovieRatingData)[]> {
     const providerResponses = await Promise.all(
       providers.map(async provider => {
         try {
@@ -153,10 +162,6 @@ export default class DataService {
   // TODO: Cache implementieren
   private async getMovieRatingsFromCache(movieName: string) {
     return null;
-  }
-
-  private getAggregatedMovieRating(movieData: Movie) {
-    return RatingService.buildCustomProviderRating(movieData);
   }
 
 }

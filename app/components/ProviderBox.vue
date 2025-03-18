@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import type { ProviderResponse } from '~/server/interfaces/ProviderResponse';
+import type { MovieRatingData } from '~/server/interfaces/MovieRatingData';
 
 defineProps<{
-	data: ProviderResponse;
+	data: MovieRatingData;
 }>()
 </script>
 
 <template>
 	<div>
-		<div v-if="data.providerLogo">
-			{{ data.providerName }}
-			<a :href="data.providerUrl"><img class="w-20" :src="data.providerLogo"></a>
+		<div v-if="data.logoUrl">
+			{{ data.name }}
+			<a :href="data.homepageUrl"><img class="w-20" :src="data.logoUrl"></a>
 		</div>
 		<div v-else>
-			<a :href="data.providerUrl">{{ data.providerName }}</a>
+			<a :href="data.homepageUrl">{{ data.name }}</a>
 		</div>
 		<SingleMovieDetail v-if="data.primaryRating" :label="'Primary-Rating'" :detail="data.primaryRating" />
 		<SingleMovieDetail v-if="data.userRating" :label="'User-Rating'" :detail="data.userRating" />

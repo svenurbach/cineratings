@@ -1,7 +1,7 @@
 // Bekommt von der View/LocalStorage die ausgewählten Provider und gibt diese als Instanz zurück.
 // TODO: Vielleicht sollte die ProviderFactory die Providerklassen in einem property als lsite speichern und das objekt könnte dann immer abgerufen werden. damit man nicht x mal die klasse instanzieren muss.
 
-import type { Provider } from "../interfaces/Provider";
+import type { MovieRatingProvider } from "../interfaces/MovieRatingProvider";
 // TODO: Alle verfügbaren provider dynamisch importieren lassen
 import OmdbProvider from "../providers/OmdbProvider";
 import TmdbProvider from "../providers/TmdbProvider";
@@ -9,7 +9,7 @@ import ImdbProvider from "../providers/ImdbProvider";
 import MetacriticProvider from "../providers/MetacriticProvider";
 import RottenTomatoesProvider from "../providers/RottentomatoesProvider";
 
-const providerMap: Record<string, new () => Provider> = {
+const providerMap: Record<string, new () => MovieRatingProvider> = {
   tmdb: TmdbProvider,
   omdb: OmdbProvider,
   imdb: ImdbProvider,
@@ -27,8 +27,8 @@ export default class ProviderFactory {
   //   return providers[providerName] || null;
   // }
 
-  static createProviders(providerNames: string[]): Provider[] {
-    const providers: Provider[] = [];
+  static createProviders(providerNames: string[]): MovieRatingProvider[] {
+    const providers: MovieRatingProvider[] = [];
 
     providerNames.forEach(provider => {
       const ProviderClass = providerMap[provider];
@@ -48,7 +48,7 @@ export default class ProviderFactory {
   //   return providerMap['omdb'];
   // }
 
-  createAllProvidersFromList(): Provider[] {
+  createAllProvidersFromList(): MovieRatingProvider[] {
     const providers = Object.values(providerMap).map(ProviderClass => new ProviderClass());
     console.log("createAllProviders", providers);
     return providers;

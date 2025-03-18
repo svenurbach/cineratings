@@ -1,20 +1,24 @@
 // Hier sollen die Daten eines bestimmten Films beim Provider TMDB abgefragt und zurückgegeben werden.
-import type { Movie } from '../interfaces/Movie';
-import type { Provider } from '../interfaces/Provider';
+import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
+import type { MovieMetadata } from '../interfaces/MovieMetadata';
+import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
-export default class TmdbProvider implements Provider {
-    readonly providerId = 'tmdb';
-    readonly providerName = 'The Movie Database (TMDB)';
-    readonly providerLogo = 'https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg';
-    readonly providerUrl = "https://www.themoviedb.org/";
+export default class TmdbProvider implements MovieRatingProvider {
+    readonly id = 'tmdb';
+    readonly name = 'The Movie Database (TMDB)';
+    readonly homepageUrl = "https://www.themoviedb.org/";
+    readonly logoUrl = 'https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg';
 
-    async fetchMovie(query: string) {
+    searchMovie(_query: string): Promise<MovieMetadata[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    async fetchMovie(query: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
             const response = await $fetch(`api/providers/tmdb`, {
                 query: { query }
             });
-            console.log('TMDB Provider: fetchMovie->response:', response);
 
             // Check if more than one result was returned
             // If so, return a list of movies to the view and let the user choose one
@@ -26,28 +30,19 @@ export default class TmdbProvider implements Provider {
 
             if (!movieData) throw new Error('No movie found');
 
-            if (import.meta.server) {
-                console.log("Dieser Code läuft auf dem Server.");
-            }
-
-            if (import.meta.client) {
-                console.log("Dieser Code läuft im Client.");
-            }
-
-            const providerResponse: Movie = {
-                title: movieData.title,
-                releaseDate: movieData.release_date,
-                imdbId: query,
-                posterUrl: movieData.poster_path,
-                provider: {
-                    providerId: this.providerId,
-                    providerName: this.providerName,
-                    providerLogo: this.providerLogo,
-                    providerUrl: this.providerUrl,
-                    userRating: movieData.vote_average.toString(),
-                    userVotes: movieData.vote_count.toString()
-                },
-                providers: []
+            const providerResponse: MovieRatingData = {
+                id: this.id,
+                name: this.name,
+                homepageUrl: this.homepageUrl,
+                logoUrl: this.logoUrl,
+                userRating: movieData.vote_average.toString(),
+                userVotes: movieData.vote_count.toString(),
+                movieMetadata: {
+                    title: movieData.title,
+                    year: movieData.release_date,
+                    imdbId: query,
+                    posterUrl: movieData.poster_path
+                }
             };
 
             return providerResponse;

@@ -7,7 +7,7 @@ const selectedProviders = ref<Set<string>>(new Set());
 watch(selectedProviders, (newVal) => {
     localStorage.setItem('selectedProviders', JSON.stringify(Array.from(newVal)));
 }, { deep: true });
-// TODO: Hier soll die Liste der ausgewählten Provider aus dem LocalStorage geladen werden. (Dabei muss sichergestellt werden das die Einträge passen, falls ein Provider entfernt oder hinzugefügt wurde!) 
+// TODO: Hier soll die Liste der ausgewählten Provider aus dem LocalStorage geladen werden. (Dabei muss sichergestellt werden das die Einträge passen, falls ein Provider entfernt oder hinzugefügt wurde!)
 // Dies soll im composable useStoredProviders erfolgen
 
 onMounted(() => {
@@ -28,10 +28,10 @@ onUnmounted(() => {
             <div v-else-if="error">Error loading providers</div>
             <div v-else>
                 <ul>
-                    <li v-for="{ providerId, providerName } in data" :key="providerId">
+                    <li v-for="{ id, name } in data" :key="id">
                         <label>
-                            <input v-model="selectedProviders" type="checkbox" :value="providerId">
-                            {{ providerName }}
+                            <input v-model="selectedProviders" type="checkbox" :value="id">
+                            {{ name }}
                         </label>
                     </li>
                 </ul>
