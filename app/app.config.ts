@@ -1,5 +1,5 @@
 export default defineAppConfig({
-    title: 'cineRatings',
+    title: 'CineRatings',
     theme: {
       dark: true,
       colors: {
@@ -7,5 +7,5 @@ export default defineAppConfig({
       }
     },
     providerDirectory: 'server/providers',
+    mainProvider: 'omdb',
   })
-  

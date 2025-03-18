@@ -6,14 +6,14 @@ const route = useRoute();
 const { ratingDataRecords, getMovie } = useFetchMovie();
 const param = ref(route.query.movieId as string);
 const customRecordMetadata = ref<MovieMetadata>();
+const appConfig = useAppConfig()
 
 onMounted(() => {
   getMovie(param.value);
 
   watch(ratingDataRecords, (newValue) => {
     if (newValue) {
-      customRecordMetadata.value = newValue.find((record) => record.id === 'cr')?.movieMetadata;
-      console.log(customRecordMetadata.value);
+      customRecordMetadata.value = newValue.find((record) => record.name === appConfig.title)?.movieMetadata;
     }
   });
 });

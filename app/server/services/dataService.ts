@@ -12,6 +12,8 @@ import type { MovieMetadata } from '../interfaces/MovieMetadata';
 import RatingService from './RatingService';
 
 export default class DataService {
+  appConfig;
+  appTitle: string;
   ProviderFactory: ProviderFactory;
   providerList: string[];
   mainProvider: string;
@@ -19,9 +21,11 @@ export default class DataService {
   aggregatedMovieRating: number = 0.0;
 
   public constructor() {
+    this.appConfig = useAppConfig();
+    this.appTitle = this.appConfig.title;
     this.ProviderFactory = new ProviderFactory();
     this.providerList = this.getProviderListFromView(); // Die Liste muss von der Factory kommen und dann mit der View abgeglichen werden
-    this.mainProvider = 'omdb'; // TODO: Muss dynamisch ermittelt werden
+    this.mainProvider = this.appConfig.mainProvider;
   }
   // MovieObject
 
@@ -82,29 +86,12 @@ export default class DataService {
     return movieRatingRecords;
   }
 
-  // private buildCustomProviderRating(aggregatedMovieRating: string): MovieRatingData {
-  //   // TODO: Daten müssen aus der AppConfig kommen
-  //   const customMovieRating: MovieRatingData = {
-  //     id: 'cr',
-  //     name: 'CineRatings',
-  //     homepageUrl: 'https://www.cineratings.de',
-  //     primaryRating: aggregatedMovieRating,
-  //     movieMetadata: {
-  //       title: 'empty',
-  //       year: 'empty',
-  //       imdbId: 'empty'
-  //     }
-  //   };
-  //   console.log('buildCustomProviderRating', customMovieRating);
-  //   return customMovieRating;
-  // }
-
   private buildCustomRatingRecord(aggregatedMovieRating: string, movieRatingRecords: MovieRatingData[]): MovieRatingData {
     const { movieMetadata: { title, year, imdbId, posterUrl } } = this.getMovieDetailsFromCoreProvider(this.mainProvider, movieRatingRecords);
 
     const customMovieRatingRecord: MovieRatingData = {
       id: 'cr',
-      name: 'CineRatings',
+      name: this.appTitle,
       homepageUrl: 'https://www.cineratings.de',
       primaryRating: aggregatedMovieRating,
       movieMetadata: {
@@ -128,17 +115,6 @@ export default class DataService {
 
     return mainProviderData;
   }
-
-  // private addProviderRatingsToMovie(movie: Movie, providerResponses: Movie[]) {
-  //   if (movie.providers) {
-  //     providerResponses.forEach(item => {
-  //       if (item.provider) {
-  //         movie.providers.push(item.provider);
-  //       }
-  //     });
-  //   }
-  //   return movie;
-  // }
 
   private async getMovieRatingsFromProviders(imdbId: string, providers: MovieRatingProvider[]): Promise<(MovieRatingData)[]> {
     const providerResponses = await Promise.all(
