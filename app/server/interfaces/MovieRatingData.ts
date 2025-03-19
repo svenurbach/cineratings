@@ -1,12 +1,7 @@
+import type { MovieRatingProviderInfo } from "./MovieRatingProviderInfo";
 import type { MovieMetadata } from "./MovieMetadata";
 
-export interface MovieRatingData {
-  // TODO: Redundant (siehe MovieRatingProvider)
-  readonly id: string; // "tmdb"
-  readonly name: string; // "The Movie Database"
-  readonly homepageUrl: string;
-  readonly logoUrl?: string;
-
+export interface MovieRatingData extends MovieRatingProviderInfo{
   readonly primaryRating?: string;
   readonly userRating?: string;
   readonly userVotes?: string;
