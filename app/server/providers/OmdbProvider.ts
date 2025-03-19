@@ -46,6 +46,8 @@ export default class OmdbProvider implements MovieRatingProvider {
             // If so, return a list of movies to the view and let the user choose one
             // Make a id search with the users choice
 
+            console.log('OMDB Provider: fetchMovie->response:', response);
+
             // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
             const movieData = response as { Metascore: string, imdbID: string, Title: string, Year: string, Poster: string };
 

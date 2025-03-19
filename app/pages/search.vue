@@ -38,7 +38,7 @@ const redirectToMovieDetails = (movieId: string) => {
                 </div>
                 <div class="p-2">
                     <span class="font-bold text-sm line-clamp-2 leading-4">{{ movie.title }}</span>
-                    <span class="text-xs leading-5">{{ movie.releaseDate }}</span>
+                    <span class="text-xs leading-5">{{ movie.year }}</span>
                 </div>
 
             </li>
