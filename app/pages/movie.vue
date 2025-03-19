@@ -40,11 +40,12 @@ onMounted(() => {
 
     <div class="my-2 p-2 border border-solid border-black">
       <h3>Anbieter</h3>
-      <ProviderBox
-        v-for="record in ratingDataRecords"
-        :key="record.id"
-        :data="record"
-        class="p-2 border-b" />
+      <template v-for="record in ratingDataRecords" :key="record.id">
+          <ProviderBox
+            v-if="record.primaryRating || record.userRating"
+            :data="record"
+            class="p-2 border-b" />
+      </template>
     </div>
 
   </section>

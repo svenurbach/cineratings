@@ -7,5 +7,5 @@ export default defineAppConfig({
       }
     },
     providerDirectory: 'server/providers',
-    mainProvider: 'omdb',
+    mainProvider: 'tmdb',
   })

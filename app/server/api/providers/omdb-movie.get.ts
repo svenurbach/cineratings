@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 	const apiKey = config.omdbApiKey;
 
 	const query = getQuery(event);
-	const imdbId = query.query as string;
+	const imdbId = query.imdbId as string;
 
 	if (!imdbId) {
 		throw createError({

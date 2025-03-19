@@ -34,12 +34,12 @@ export default class OmdbProvider implements MovieRatingProvider {
         }
     }
 
-    async fetchMovie(query: string): Promise<MovieRatingData> {
+    async fetchMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
             // TODO: Was wird mitgegeben?
             const response = await $fetch(`api/providers/omdb-movie`, {
-                query: { query }
+                query: { imdbId }
             });
 
             // Check if more than one result was returned
@@ -57,7 +57,7 @@ export default class OmdbProvider implements MovieRatingProvider {
                 id: this.id,
                 name: this.name,
                 homepageUrl: this.homepageUrl,
-                primaryRating: movieData.Metascore,
+                primaryRating: movieData.Metascore !== 'N/A' ? movieData.Metascore : undefined,
                 movieMetadata: {
                     title: movieData.Title,
                     year: movieData.Year,
