@@ -78,7 +78,7 @@ export default class DataService {
   private async getMovieData(imdbId: string): Promise<MovieRatingData[]> {
     const providers = this.getSelectedProvidersFromFactory();
     const movieRatingRecords = await this.getMovieRatingsFromProviders(imdbId, providers);
-    const aggregatedMovieRating = (RatingService.calculateAggregatedMovieRating(movieRatingRecords));
+    const aggregatedMovieRating = RatingService.calculateAggregatedMovieRating(movieRatingRecords);
     const customRatingRecord = this.buildCustomRatingRecord(aggregatedMovieRating, movieRatingRecords);
     movieRatingRecords.push(customRatingRecord);
     console.log("movieRatingRecords->customRatingRecord", movieRatingRecords);

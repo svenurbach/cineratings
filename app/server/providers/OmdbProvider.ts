@@ -49,7 +49,13 @@ export default class OmdbProvider implements MovieRatingProvider {
             console.log('OMDB Provider: fetchMovie->response:', response);
 
             // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
-            const movieData = response as { Metascore: string, imdbID: string, Title: string, Year: string, Poster: string };
+            const movieData = response as {
+                Metascore: string,
+                imdbID: string,
+                Title: string,
+                Year: string,
+                Poster: string
+            };
 
             if (!movieData) throw new Error('No movie found');
 

@@ -28,7 +28,7 @@ const redirectToMovieDetails = (movieId: string) => {
         <ul class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
             <!-- TODO: Fix text h position -->
             <li v-for="movie in movies" :key="movie.imdbId" class="grid cursor-pointer overflow-hidden bg-zinc-200 rounded-lg hover:sepia" @click="redirectToMovieDetails(movie.imdbId)">
-                <div class="">
+                <div>
                     <!-- TODO: IMG durch SVG ersetzen -->
                     <img
                         :src="movie.posterUrl || 'images/poster-placeholder.jpg'"
