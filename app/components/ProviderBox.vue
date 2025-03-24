@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MovieRatingData } from '~/server/interfaces/MovieRatingData';
+import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
 defineProps<{
 	data: MovieRatingData;

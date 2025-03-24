@@ -1,4 +1,4 @@
-import type { MovieMetadata } from '~/server/interfaces/MovieMetadata';
+import type { MovieMetadata } from '~/interfaces/MovieMetadata';
 
 export function useMovieSearch() {
     const { $dataService } = useNuxtApp();

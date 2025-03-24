@@ -1,4 +1,4 @@
-import type { MovieRatingData } from '~/server/interfaces/MovieRatingData';
+import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
 export function useFetchMovie() {
     const { $dataService } = useNuxtApp();

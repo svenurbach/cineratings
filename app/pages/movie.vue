@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { MovieMetadata } from '~/server/interfaces/MovieMetadata';
-// import type { MovieRatingData } from '~/server/interfaces/MovieRatingData';
+import type { MovieMetadata } from '~/interfaces/MovieMetadata';
+// import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
 const route = useRoute();
 const { ratingDataRecords, getMovie } = useFetchMovie();
