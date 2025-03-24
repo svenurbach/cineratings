@@ -9,6 +9,15 @@ export default class RatingService {
         // welche ratings vorhanden sind, sie gewichtet und dann auswertet
         let sum = 0;
         let count = 0;
+
+        // TODO: Testing!
+        // 1. Wenn nur PR dann in format XX umgewandelt werden
+        // 2. WEnn nur UR dann in format XX umgewandelt werden
+        // 3. Wenn UR und UV hat müssen diese gewichtet werden und anschießend auf XX umgewandelt werden
+
+
+
+
         ratingDataRecords.forEach(provider => {
             if (provider.primaryRating) {
                 sum += parseFloat(provider.primaryRating);

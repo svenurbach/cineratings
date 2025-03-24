@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from '#app';
-import DataService from '~/server/services/DataService';
+import DataService from '~/services/DataService';
 
 export default defineNuxtPlugin((nuxtApp) => {
     // TODO: Abhängigkeiten übergeben. Z.B. ProviderFactory
