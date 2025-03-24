@@ -29,4 +29,9 @@ export default class RatingService {
         return custom;
     }
 
+    static normalizeRating(rating: number, maxRating: number): number {
+        const ownMaxRating = 100;
+        const normalizedRating = (rating / maxRating) * ownMaxRating
+        return normalizedRating;
+    }
 }
