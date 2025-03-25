@@ -6,3 +6,10 @@
 
 ### debugging
 `npm run dev --inspect`
+
+### Linting
+`npm run lint`
+
+### Testing
+#### Unittests
+`npm run test`
