@@ -6,15 +6,16 @@
 // Speichere die Filmdaten im Cache
 // Gebe die Filmdaten zurück
 import ProviderFactory from '../factories/ProviderFactory';
+import RatingService from './RatingService';
 import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 import type { MovieMetadata } from '../interfaces/MovieMetadata';
-import RatingService from './RatingService';
 
 export default class DataService {
   appConfig;
   appTitle: string;
   ProviderFactory: ProviderFactory;
+  RatingService: RatingService;
   providerList: string[];
   mainProvider: string;
   // movieName: string = 'Inception';
@@ -24,6 +25,7 @@ export default class DataService {
     this.appConfig = useAppConfig();
     this.appTitle = this.appConfig.title;
     this.ProviderFactory = new ProviderFactory();
+    this.RatingService = new RatingService();
     this.providerList = this.getProviderListFromView(); // Die Liste muss von der Factory kommen und dann mit der View abgeglichen werden
     this.mainProvider = this.appConfig.mainProvider;
   }
@@ -78,7 +80,7 @@ export default class DataService {
   private async getMovieData(imdbId: string): Promise<MovieRatingData[]> {
     const providers = this.getSelectedProvidersFromFactory();
     const movieRatingRecords = await this.getMovieRatingsFromProviders(imdbId, providers);
-    const aggregatedMovieRating = RatingService.calculateAggregatedMovieRating(movieRatingRecords);
+    const aggregatedMovieRating = this.RatingService.getAggregatedMovieRating(movieRatingRecords);
     const customRatingRecord = this.buildCustomRatingRecord(aggregatedMovieRating, movieRatingRecords);
     movieRatingRecords.push(customRatingRecord);
     console.log("movieRatingRecords->customRatingRecord", movieRatingRecords);
