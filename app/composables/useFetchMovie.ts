@@ -26,9 +26,10 @@ export function useFetchMovie() {
         }
 
         try {
+            console.log('useFetchMovie > getMovie > imdbId', imdbId);
+
             const response: MovieRatingData[] = await $dataService.getMovieData(imdbId);
             ratingDataRecords.value = response;
-            console.log('useFetchMovie->getMovie->imdbId:', imdbId);
         } catch (error) {
             console.error('Fehler beim Abrufen des Films:', error);
         }
