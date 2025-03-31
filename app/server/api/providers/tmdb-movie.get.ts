@@ -12,6 +12,13 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  // Prüfen ob die Response zum Film im Cache vorliegt
+  const cacheKey = `tmdb-${imdbId}`;
+  const cachedData = getCache(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
   const url = `https://api.themoviedb.org/3/find/${encodeURIComponent(imdbId)}?external_source=imdb_id&language=de-DE`;
   const options = {
     method: 'GET',
@@ -23,6 +30,8 @@ export default defineEventHandler(async (event) => {
 
   // TODO: try catch
   const response = await fetch(url, options);
+  console.log(`[TMDB-Movie] response:`, response);
+
 
   if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
 
@@ -57,6 +66,9 @@ export default defineEventHandler(async (event) => {
   //   "tv_episode_results": [],
   //   "tv_season_results": []
   // }
+
+  // Antwort im Cache ablegen (TTL: 5 Minuten)
+  setCache(cacheKey, data, 5 * 60 * 1000);
 
   return data;
 

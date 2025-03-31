@@ -1,3 +1,5 @@
+import { getCache, setCache } from "../../utils/cache";
+
 export default defineEventHandler(async (event) => {
 	const config = useRuntimeConfig();
 	const apiKey = config.omdbApiKey;
@@ -12,6 +14,13 @@ export default defineEventHandler(async (event) => {
 		});
 	}
 
+	// Prüfen ob die Response zum Film im Cache vorliegt
+	const cacheKey = `omdb-${imdbId}`;
+	const cachedData = getCache(cacheKey);
+	if (cachedData) {
+		return cachedData;
+	}
+
 	const url = `http://www.omdbapi.com/?apikey=${apiKey}&i=${encodeURIComponent(imdbId)}`;
 	const options = {
 		method: 'GET',
@@ -21,6 +30,7 @@ export default defineEventHandler(async (event) => {
 	};
 
 	const response = await fetch(url, options);
+	console.log(`[OMDB-Movie] response:`, response);
 
 	if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
 
@@ -67,6 +77,9 @@ export default defineEventHandler(async (event) => {
 	// 	"Website": "N/A",
 	// 	"Response": "True"
 	// };
+
+	// Antwort im Cache ablegen (TTL: 5 Minuten)
+	setCache(cacheKey, data, 5 * 60 * 1000);
 
 	return data;
 
