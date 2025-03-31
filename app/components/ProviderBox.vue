@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
 	<div>
-		<div v-if="data.logoUrl">
+		<div v-if="!data.logoUrl">
 			{{ data.name }}
 			<a :href="data.homepageUrl"><img class="w-20" :src="data.logoUrl"></a>
 		</div>
