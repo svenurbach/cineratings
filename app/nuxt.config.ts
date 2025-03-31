@@ -28,6 +28,16 @@ export default defineNuxtConfig({
       stylistic: false
     }
   },
+  nitro: {
+    routeRules: {
+      '/api/providers/**': {
+        cache: {
+          maxAge: 33,
+          swr: false
+        }
+      }
+    }
+  },
   // ---------------------- KEYS ----------------------
   runtimeConfig: {
     // can be overridden by NUXT_API_SECRET environment variable
