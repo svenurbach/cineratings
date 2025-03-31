@@ -25,7 +25,6 @@ export default class TmdbProvider implements MovieRatingProvider {
                 posterUrl: movie.poster_path ? this.posterBaseURl.concat(movie.poster_path) : undefined,
             }));
 
-            console.log('TMDB Provider: searchMovie->movies:', movies);
             return movies;
 
         } catch (error) {
@@ -45,7 +44,6 @@ export default class TmdbProvider implements MovieRatingProvider {
             // If so, return a list of movies to the view and let the user choose one
             // Make a id search with the users choice
 
-            console.log('TMDB Provider: fetchMovie->response:', response);
 
             // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
             const movieData = (response as {
@@ -55,6 +53,8 @@ export default class TmdbProvider implements MovieRatingProvider {
                     release_date: string;
                     vote_average: number;
                     vote_count: number;
+                    runtime: number;
+                    overview: string;
                 }[];
             }).movie_results[0];
             // PATTERN MUSS ZUM CUSTOM RESPONSE PASSEN! Auch die Typen!
@@ -72,7 +72,9 @@ export default class TmdbProvider implements MovieRatingProvider {
                     title: movieData.title,
                     year: movieData.release_date.substring(0, 4) ?? "Unknown", // "2005-10-20"
                     imdbId: query,
-                    posterUrl: this.posterBaseURl.concat(movieData.poster_path)
+                    posterUrl: this.posterBaseURl.concat(movieData.poster_path),
+                    runtime: movieData.runtime ? movieData.runtime.toString() : "0",
+                    plot: movieData.overview ?? "No plot available"
                 }
             };
 
