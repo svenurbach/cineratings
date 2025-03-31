@@ -3,7 +3,8 @@ export interface MovieMetadata {
     readonly year: string;
     readonly imdbId: string; // WICHTIG um den Film Provider übergreifend zu identifizieren
     readonly posterUrl?: string;
-    // regisseur: string;
+    readonly runtime?: string;
+    readonly plot?: string;
     // schauspieler: string;
     // genre: string;
 }
