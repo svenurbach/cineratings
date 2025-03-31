@@ -1,9 +1,14 @@
 <script setup lang="ts">
 const router = useRouter();
 const movieName = ref('');
+const targetPage = "/search";
 
-const redirectToMovieSearch = () => {
-  router.push({ path: '/search', query: { movieName: movieName.value } });
+const performMovieSearch = () => {
+  // TODO: dont route if already on search page
+  // if (router.currentRoute.value.path !== targetPage) {
+  // }
+    // searchMovie(movieName.value);
+  router.push({ path: targetPage, query: { movieName: movieName.value } });
 };
 
 const clearInput = () => {
@@ -20,7 +25,7 @@ const clearInput = () => {
     <input
       v-model="movieName" type="text" placeholder="Suchen ..."
       class="w-full px-4 py-2 text-gray-700 focus:outline-none"
-      @keyup.enter="redirectToMovieSearch">
+      @keyup.enter="performMovieSearch">
     <button v-if="movieName" class="flex px-4 py-2 bg-gray-300 text-white hover:bg-red-600" @click="clearInput">
       <svg
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -30,7 +35,7 @@ const clearInput = () => {
           d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
-    <button class="flex px-4 py-2 bg-gray-300 text-white hover:bg-green-600" @click="redirectToMovieSearch">
+    <button class="flex px-4 py-2 bg-gray-300 text-white hover:bg-green-600" @click="performMovieSearch">
       <svg
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="size-6">

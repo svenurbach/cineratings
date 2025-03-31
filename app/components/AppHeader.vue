@@ -10,7 +10,4 @@ const appTitle = appConfig.title
         <h1 class="text-xl"><a href="/">{{ appTitle }}</a></h1>
         <AppMenu />
     </div>
-    <div class="mb-10">
-        <SearchInput />
-    </div>
 </template>
