@@ -4,6 +4,6 @@ import { getFullCache } from "../../server/utils/cache";
 export default defineEventHandler(() => {
   return {
     cache: getFullCache(),
-    timestamp: new Date().toISOString(),
+    timestamp: new Date()
   };
 });
