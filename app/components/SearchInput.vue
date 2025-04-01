@@ -21,7 +21,7 @@ const clearInput = () => {
 </script>
 
 <template>
-  <div class="flex rounded-full border border-gray-300 overflow-hidden">
+  <!-- <div class="flex rounded-full border border-gray-300 overflow-hidden">
     <input
       v-model="movieName" type="text" placeholder="Suchen ..."
       class="w-full px-4 py-2 text-gray-700 focus:outline-none"
@@ -44,5 +44,43 @@ const clearInput = () => {
           d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
       </svg>
     </button>
-  </div>
+  </div> -->
+  <!-- <UContainer class="mb-10"> -->
+  <UButtonGroup
+    class="py-2 w-full mb-6"
+  >
+    <UInput
+      v-model="movieName"
+      variant="outline"
+      icon="i-lucide-search"
+      type="search"
+      color="neutral"
+      :autofocus=true
+      placeholder="Film suchen ..."
+      :ui="{ trailing: 'pe-1' }"
+      size="xl"
+      class="w-full"
+      @keyup.enter="performMovieSearch"
+    >
+    <template v-if="movieName?.length" #trailing>
+      <UButton
+        color="neutral"
+        variant="link"
+        size="xl"
+        icon="i-lucide-circle-x"
+        aria-label="Eingabefeld leeren"
+        @click="clearInput"
+      />
+    </template>
+    </UInput>
+      <UButton
+        color="neutral"
+        variant="outline"
+        size="xl"
+        icon="i-lucide-chevron-right"
+        aria-label="Suchen"
+        @click="performMovieSearch"
+      />
+  </UButtonGroup>
+<!-- </UContainer> -->
 </template>

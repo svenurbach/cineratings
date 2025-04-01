@@ -36,11 +36,11 @@ watch(ratingDataRecords, (newValue) => {
         <!-- Image starts -->
         <img
           :src="customRecordMetadata.posterUrl || 'images/poster-placeholder.jpg'" :alt="customRecordMetadata.title"
-          class="w-full shadow-lg shadow-gray-500/80 rounded-2xl">
+          class="w-full shadow-lg rounded-[calc(var(--ui-radius)*2)]">
         <!-- Image ends -->
         <!-- Buttons start -->
         <button
-          id="back-button" class="absolute top-6 left-6 bg-gray-800 text-white p-2 rounded-full opacity-95"
+          id="back-button" class="absolute top-6 left-6 bg-(--ui-secondary) p-2 rounded-full opacity-95"
           @click="$router.back()">
           <svg
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -49,7 +49,7 @@ watch(ratingDataRecords, (newValue) => {
           </svg>
         </button>
         <button
-          id="like-button" class="absolute top-6 right-6 bg-gray-800 text-white p-2 rounded-full opacity-95"
+          id="like-button" class="absolute top-6 right-6 bg-gray-800 p-2 rounded-full opacity-95"
           @click="$router.back()">
           <svg
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -61,10 +61,10 @@ watch(ratingDataRecords, (newValue) => {
         </button>
         <!-- Buttons end -->
 
-        <div class="flex flex-col justify-between absolute bottom-6 left-1/2 transform -translate-x-1/2 w-[calc(100%-3rem)] text-white">
+        <div class="flex flex-col justify-between absolute bottom-6 left-1/2 transform -translate-x-1/2 w-[calc(100%-3rem)]">
 
           <!-- Modal starts -->
-          <div v-if="isOpen" id="movie-ratings" class="p-3 mb-3 bg-gray-800 bg-opacity-95 rounded-lg">
+          <div v-if="isOpen" id="movie-ratings" class="p-3 mb-3 bg-gray-400 dark:bg-gray-800 bg-opacity-95 rounded-lg">
             <div class="">
               <h3>Anbieter</h3>
               <template v-for="record in ratingDataRecords" :key="record.id">
@@ -77,7 +77,7 @@ watch(ratingDataRecords, (newValue) => {
           <!-- Movie Meta starts -->
           <div
           id="movie-meta" :data-imdb=customRecordMetadata.imdbId
-          class="flex flex-row justify-between bg-gray-800 bg-opacity-95 rounded-lg p-3">
+          class="flex flex-row justify-between bg-(--ui-neutral) bg-opacity-95 rounded-lg p-3">
             <div class="basis-3/4">
               <SingleMovieDetail :detail="customRecordMetadata.title" class="text-lg/6 font-bold" />
               <SingleMovieDetail :detail="customRecordMetadata.year" />
