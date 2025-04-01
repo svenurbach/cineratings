@@ -11,17 +11,11 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    '@nuxtjs/tailwindcss',
+    '@nuxt/ui',
     '@nuxt/eslint',
     '@nuxt/test-utils/module'
   ],
-  tailwindcss: {
-    cssPath: 'assets/css/tailwind.css',
-    exposeConfig: true,
-    viewer: true,
-    editorSupport: true,
-    // and more...
-  },
+  css: ['~/assets/css/main.css'],
   eslint: {
     // options here
     config: {
@@ -32,7 +26,7 @@ export default defineNuxtConfig({
     routeRules: {
       '/api/providers/**': {
         cache: {
-          maxAge: 33,
+          maxAge: 6000,
           swr: false
         }
       }

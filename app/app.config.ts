@@ -1,9 +1,14 @@
 export default defineAppConfig({
   title: 'CineRatings',
-  theme: {
-    dark: true,
+  ui: {
     colors: {
-      primary: '#ff0000'
+      primary: 'violet',
+      secondary: 'orange',
+      success: 'green',
+      info: 'blue',
+      warning: 'yellow',
+      error: 'red',
+      neutral: 'slate',
     }
   },
   mainProvider: 'tmdb',

@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+    --font-sans: 'Lato', sans-serif;
+    --font-serif: 'Merriweather', serif;
+    --font-mono: 'Courier New', monospace;
+    --font-heading: Arial, sans-serif;
+  }
+
+:root {
+    --ui-primary: var(--ui-color-primary-500);
+    --ui-secondary: var(--ui-color-secondary-500);
+    --ui-success: var(--ui-color-success-500);
+    --ui-info: var(--ui-color-info-500);
+    --ui-warning: var(--ui-color-warning-500);
+    --ui-error: var(--ui-color-error-500);
+    --ui-neutral: var(--ui-color-neutral-300);
+    --ui-radius: var(--radius-lg);
+}
+
+.dark {
+    --ui-primary: var(--ui-color-primary-400);
+    --ui-secondary: var(--ui-color-secondary-400);
+    --ui-success: var(--ui-color-success-400);
+    --ui-info: var(--ui-color-info-400);
+    --ui-warning: var(--ui-color-warning-400);
+    --ui-neutral: var(--ui-color-neutral-800);
+    --ui-error: var(--ui-color-error-400);
+}
+
+h2 {
+    @apply text-lg pb-2 font-bold text-(--ui-primary);
+}
+
+h3 {
+    @apply text-xl font-bold text-(--ui-secondary);
+}
+
+p {
+    @apply pb-2;
+}
