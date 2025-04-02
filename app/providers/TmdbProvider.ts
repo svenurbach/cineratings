@@ -17,10 +17,18 @@ export default class TmdbProvider implements MovieRatingProvider {
             });
 
             // TODO: Assertion nicht typ sicher. Nochmal prüfen
-            const data = response as { results: { title: string; release_date: string, id: string; poster_path: string }[] };
+            const data = response as {
+                results: {
+                    title: string;
+                    release_date: string,
+                    id: string;
+                    poster_path: string
+                }[]
+            };
+
             const movies: MovieMetadata[] = data.results.map((movie) => ({
                 title: movie.title,
-                year: movie.release_date.substring(0, 4),
+                year: movie.release_date ? movie.release_date.substring(0, 4) : '', // "2005-10-20"
                 imdbId: movie.id,
                 posterUrl: movie.poster_path ? this.posterBaseURl.concat(movie.poster_path) : undefined,
             }));
@@ -51,10 +59,10 @@ export default class TmdbProvider implements MovieRatingProvider {
                     title: string;
                     poster_path: string;
                     release_date: string;
-                    vote_average: number;
-                    vote_count: number;
-                    runtime: number;
-                    overview: string;
+                    vote_average?: number;
+                    vote_count?: number;
+                    runtime?: number;
+                    overview?: string;
                 }[];
             }).movie_results[0];
             // PATTERN MUSS ZUM CUSTOM RESPONSE PASSEN! Auch die Typen!
@@ -66,14 +74,14 @@ export default class TmdbProvider implements MovieRatingProvider {
                 name: this.name,
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
-                userRating: movieData.vote_average.toFixed(1) ?? "0.0",
-                userVotes: movieData.vote_count.toString() ?? "0",
+                userRating: movieData.vote_average,
+                userVotes: movieData.vote_count,
                 movieMetadata: {
                     title: movieData.title,
                     year: movieData.release_date.substring(0, 4) ?? "Unknown", // "2005-10-20"
                     imdbId: query,
                     posterUrl: this.posterBaseURl.concat(movieData.poster_path),
-                    runtime: movieData.runtime ? movieData.runtime.toString() : "0",
+                    runtime: movieData.runtime,
                     plot: movieData.overview ?? "No plot available"
                 }
             };

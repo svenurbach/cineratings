@@ -4,10 +4,10 @@ import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class ImdbProvider implements MovieRatingProvider {
-    readonly id = "imdb";
-    readonly name = "The Internet Movie Database (IMDb)";
-    readonly homepageUrl = "https://www.imdb.com/";
-    readonly logoUrl = "https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg";
+    readonly id = "trakt";
+    readonly name = "Trakt API";
+    readonly homepageUrl = "https://trakt.docs.apiary.io/";
+    readonly logoUrl = "https://avatars.githubusercontent.com/u/5060045?s=48&v=4";
 
     searchMovie(_query: string): Promise<MovieMetadata[]> {
         throw new Error(`Provider ${this.id} did not support searching for movies.`);
@@ -16,23 +16,13 @@ export default class ImdbProvider implements MovieRatingProvider {
     async fetchMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
-            // TODO: Was wird mitgegeben?
-            const response = await $fetch(`api/providers/omdb-movie`, {
+            const response = await $fetch(`/api/providers/trakt-ratings`, {
                 query: { imdbId }
             });
 
-            // Check if more than one result was returned
-            // If so, return a list of movies to the view and let the user choose one
-            // Make a id search with the users choice
-
-            // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
-            // TODO: omdbResponse type erstellen
             const movieData = response as {
-                imdbID: string,
-                Title: string,
-                Year: string,
-                imdbRating: string,
-                imdbVotes: string,
+                rating: number,
+                votes: number,
             };
 
             if (!movieData) throw new Error('No movie found');
@@ -42,16 +32,14 @@ export default class ImdbProvider implements MovieRatingProvider {
                 name: this.name,
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
-                userRating: movieData.imdbRating !== 'N/A' ? movieData.imdbRating : undefined,
-                userVotes: movieData.imdbVotes !== 'N/A' ? movieData.imdbVotes : undefined,
+                userRating: movieData.rating ? movieData.rating.toFixed(1) : undefined,
+                userVotes: movieData.rating ? movieData.votes.toString() : undefined,
                 movieMetadata: {
-                    title: movieData.Title,
-                    year: movieData.Year,
-                    imdbId: movieData.imdbID,
+                    title: "no title",
+                    year: "no year",
+                    imdbId: imdbId,
                 }
             };
-
-            // TODO: Values mit N/A ersetzen durch null
 
             return providerResponse;
 

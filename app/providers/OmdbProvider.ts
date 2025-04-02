@@ -4,10 +4,11 @@ import type { MovieMetadata } from '../interfaces/MovieMetadata';
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class OmdbProvider implements MovieRatingProvider {
-    readonly mainProvider = true; // TODO: Testing: Es darf nur einen base provider geben. #2 check typeOf und remove property!
+    readonly mainProvider = true; // TODO: Wird aktuell nicht genutzt
     readonly id = 'omdb';
     readonly name = 'Open Media Database API';
     readonly homepageUrl = "https://www.omdbapi.com/";
+    readonly logoUrl = "/images/provider/omdb-logo.png";
 
     // Filmsuche an search api. Zurück kommt eine Liste an Filmen
     async searchMovie(query: string): Promise<MovieMetadata[]> {
@@ -16,8 +17,14 @@ export default class OmdbProvider implements MovieRatingProvider {
                 query: { query }
             });
 
-            // TODO: Assertion nicht typ sicher. Nochmal prüfen
-            const data = response as { Search: { Title: string; Year: string, imdbID: string; Poster: string }[] };
+            const data = response as {
+                Search: {
+                    Title: string;
+                    Year: string,
+                    imdbID: string;
+                    Poster: string
+                }[]
+            };
             const movies: MovieMetadata[] = data.Search.map((movie) => ({
                 title: movie.Title,
                 year: movie.Year,
@@ -36,17 +43,10 @@ export default class OmdbProvider implements MovieRatingProvider {
     async fetchMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
-            // TODO: Was wird mitgegeben?
             const response = await $fetch(`api/providers/omdb-movie`, {
                 query: { imdbId }
             });
 
-            // Check if more than one result was returned
-            // If so, return a list of movies to the view and let the user choose one
-            // Make a id search with the users choice
-
-            // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
-            // TODO: omdbResponse type erstellen
             const movieData = response as {
                 Metascore: string,
                 imdbID: string,
@@ -63,7 +63,8 @@ export default class OmdbProvider implements MovieRatingProvider {
                 id: this.id,
                 name: this.name,
                 homepageUrl: this.homepageUrl,
-                primaryRating: movieData.Metascore !== 'N/A' ? movieData.Metascore : undefined,
+                logoUrl: this.logoUrl,
+                primaryRating: movieData.Metascore !== 'N/A' ? parseInt(movieData.Metascore, 10) : undefined,
                 movieMetadata: {
                     title: movieData.Title,
                     year: movieData.Year,
@@ -73,8 +74,6 @@ export default class OmdbProvider implements MovieRatingProvider {
                     plot: movieData.Plot !== 'N/A' ? movieData.Plot : undefined,
                 }
             };
-
-            // TODO: Values mit N/A ersetzen durch null
 
             return providerResponse;
 
