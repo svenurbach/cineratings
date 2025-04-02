@@ -27,6 +27,7 @@ export default class RatingService {
             }
             // Berechnung mit dem gewichteten arithmetischen Mittel (absolute Häufigkeit)
             if (record.userRating != null && record.userVotes != null) {
+                // TODO: Der Wert maxwert muss vom provider kommen
                 totalUserRating += this.normalizeRating(Number(record.userRating), 10)
                 * Number(record.userVotes);
                 totalUserVotes += Number(record.userVotes);
@@ -57,14 +58,4 @@ export default class RatingService {
         return normalizedRating;
     }
 
-    // Wird nicht mehr gebraucht
-    public getMaxUserVoting(ratingDataRecords: MovieRatingData[]): number {
-        let maxUserVoting = 0;
-        ratingDataRecords.forEach(provider => {
-            if (provider.userVotes && Number(provider.userVotes) > maxUserVoting) {
-                maxUserVoting = Number(provider.userVotes);
-            }
-        });
-        return maxUserVoting;
-    }
 }

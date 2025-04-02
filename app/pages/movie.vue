@@ -68,8 +68,9 @@ watch(ratingDataRecords, (newValue) => {
             <div class="">
               <h3>Anbieter</h3>
               <template v-for="record in ratingDataRecords" :key="record.id">
-                <ProviderBox v-if="(record.primaryRating || record.userRating) && record.name !== appTitle" :data="record" class="p-2 border-b" />
+                <ProviderBox v-if="(record.primaryRating || record.userRating) && record.name !== appTitle" :data="record" />
               </template>
+              <p class="text-sm mt-4">Alle Angaben ohne Gewähr</p>
             </div>
           </div>
           <!-- Modal ends -->

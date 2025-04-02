@@ -11,13 +11,13 @@ export function getCache(key: string): MovieRatingData | null {
         cache.delete(key);
         return null;
     }
-    console.log(`[CACHE GET] key: ${key}`, entry.data);
+    console.log(`\x1b[32m[CACHE GET] key: ${key}\x1b[0m`);
 
     return entry.data;
 }
 
 export function setCache(key: string, data: MovieRatingData, ttl: number = 60 * 1000): void {
-    console.log(`[CACHE SET] key: ${key}, ttl: ${ttl}, data: ${data}`);
+    console.log(`\x1b[32m[CACHE SET] key: ${key}, ttl: ${ttl}\x1b[0m`);
     cache.set(key, { data, expires: Date.now() + ttl });
 }
 

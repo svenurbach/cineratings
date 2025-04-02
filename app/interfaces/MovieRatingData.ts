@@ -2,8 +2,8 @@ import type { MovieRatingProviderInfo } from "./MovieRatingProviderInfo";
 import type { MovieMetadata } from "./MovieMetadata";
 
 export interface MovieRatingData extends MovieRatingProviderInfo{
-  readonly primaryRating?: string;
-  readonly userRating?: string;
-  readonly userVotes?: string;
+  readonly primaryRating?: number;
+  readonly userRating?: number;
+  readonly userVotes?: number;
   readonly movieMetadata: MovieMetadata;
 }
