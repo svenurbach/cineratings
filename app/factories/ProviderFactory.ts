@@ -4,16 +4,18 @@
 import type { MovieRatingProvider } from "../interfaces/MovieRatingProvider";
 import OmdbProvider from "../providers/OmdbProvider";
 import TmdbProvider from "../providers/TmdbProvider";
-// import ImdbProvider from "../providers/ImdbProvider";
-// import MetacriticProvider from "../providers/MetacriticProvider";
-// import RottenTomatoesProvider from "../providers/RottentomatoesProvider";
+import ImdbProvider from "../providers/ImdbProvider";
+import MetacriticProvider from "../providers/MetacriticProvider";
+import RottenTomatoesProvider from "../providers/RottentomatoesProvider";
+import TrakrProvider from "../providers/TraktProvider";
 
 const providerMap: Record<string, new () => MovieRatingProvider> = {
   tmdb: TmdbProvider,
   omdb: OmdbProvider,
-  // imdb: ImdbProvider,
-  // metacritic: MetacriticProvider,
-  // rottentomatoes: RottenTomatoesProvider
+  imdb: ImdbProvider,
+  metacritic: MetacriticProvider,
+  rottentomatoes: RottenTomatoesProvider,
+  trakt: TrakrProvider
 };
 
 export default class ProviderFactory {

@@ -18,7 +18,8 @@ export default defineAppConfig({
     { id: 'tmdb', name: 'The Movie Database (TMDB)' },
     { id: 'imdb', name: 'The Internet Movie Database (IMDb)' },
     { id: 'rottentomatoes', name: 'Rotten Tomatoes'},
-    { id: 'metacritic', name: 'Metacritic'}
+    { id: 'metacritic', name: 'Metacritic'},
+    { id: 'trakt', name: 'Trakt API'}
   ]
 
 });

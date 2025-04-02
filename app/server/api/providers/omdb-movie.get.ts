@@ -30,7 +30,6 @@ export default defineEventHandler(async (event) => {
 	};
 
 	const response = await fetch(url, options);
-	console.log(`[OMDB-Movie] response:`, response);
 
 	if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
 
