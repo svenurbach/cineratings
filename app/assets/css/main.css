@@ -30,11 +30,15 @@
 }
 
 h2 {
-    @apply text-lg pb-2 font-bold text-(--ui-primary);
+    @apply text-xl pb-2 font-bold text-(--ui-primary);
 }
 
 h3 {
-    @apply text-xl font-bold text-(--ui-secondary);
+    @apply text-lg font-bold text-(--ui-secondary);
+}
+
+h4 {
+    @apply font-bold text-(--ui-secondary);
 }
 
 p {
