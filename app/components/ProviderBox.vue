@@ -7,16 +7,17 @@ defineProps<{
 </script>
 
 <template>
-	<div>
-		<div v-if="!data.logoUrl">
-			{{ data.name }}
-			<a :href="data.homepageUrl"><img class="w-20" :src="data.logoUrl"></a>
+	<div class="flex flex-row p-2">
+		<div class="basis-1/5 flex items-center">
+			<!-- TODO: Link zur externen Moviepage -->
+			<img class="w-14" :src="data.logoUrl" >
 		</div>
-		<div v-else>
-			<a :href="data.homepageUrl">{{ data.name }}</a>
+		<div>
+			<h4>{{ data.name }}</h4>
+			<SingleMovieDetail v-if="data.primaryRating" :label="'Bewertung'" :detail="data.primaryRating" />
+			<SingleMovieDetail v-if="data.userRating" :label="'Nutzerbewertung'" :detail="data.userRating" />
+			<SingleMovieDetail v-if="data.userVotes" :label="'Nutzerstimmen'" :detail="data.userVotes" />
 		</div>
-		<SingleMovieDetail v-if="data.primaryRating" :label="'Primary-Rating'" :detail="data.primaryRating" />
-		<SingleMovieDetail v-if="data.userRating" :label="'User-Rating'" :detail="data.userRating" />
-		<SingleMovieDetail v-if="data.userVotes" :label="'User-Votes'" :detail="data.userVotes" />
 	</div>
+	<USeparator />
 </template>

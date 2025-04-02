@@ -1,10 +1,10 @@
 <script setup lang="ts">
 defineProps<{
 	label?: string;
-	detail: string;
+	detail: string | number;
 }>()
 </script>
 
 <template>
-	<div><span v-if="label" class="font-bold">{{ label }}: </span>{{ detail }}</div>
+	<div><span v-if="label">{{ label }}: </span><span class="font-bold text-md">{{ detail }}</span></div>
 </template>
