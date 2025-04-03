@@ -7,16 +7,16 @@ defineProps<{
 </script>
 
 <template>
-    <div class="relative">
+    <div class="relative h-full cursor-pointer hover:sepia">
         <!-- TODO: IMG durch SVG ersetzen -->
         <img
         :src="posterUrl || 'images/poster-placeholder.jpg'"
         :alt="`${title}-Poster`"
         :title="title"
-        class="w-full aspect-[2/3] object-cover rounded-t-lg">
-        <div class="flex flex-col justify-between absolute bottom-2 left-1/2 transform -translate-x-1/2 w-[calc(100%-1rem)] bg-(--ui-primary) opacity-95 p-2 rounded-lg">
-            <span class="font-bold text-sm line-clamp-1 leading-4 ">{{ title }}</span>
-            <span class="text-xs leading-5">{{ year }}</span>
+        class="w-full h-full max-h-60 object-top object-cover rounded-(--ui-radius)">
+        <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-[calc(100%-1rem)] flex flex-col justify-between bg-(--ui-primary) opacity-95 p-2 rounded-(--ui-radius)">
+            <span class="font-bold text-sm line-clamp-1 ">{{ title }}</span>
+            <span class="text-xs">{{ year }}</span>
         </div>
     </div>
 </template>

@@ -20,14 +20,14 @@ const redirectToMovieDetails = (movieId: string) => {
 
 <template>
     <div>
-        <SearchInput />
+        <!-- <SearchInput /> -->
         <!-- Suchergebnisse anzeigen -->
-        <section v-if="movies">
+        <section v-if="movies" class="">
             <h2>Suchergebnisse für: "{{ param }}"</h2>
             <p>Bitte einen Film auswählen!</p>
-            <ul class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+            <ul class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4 rounded-(--ui-radius)">
                 <!-- TODO: Fix text h position -->
-                <li v-for="movie in movies" :key="movie.imdbId" class="grid cursor-pointer overflow-hidden rounded-lg hover:sepia" @click="redirectToMovieDetails(movie.imdbId)">
+                <li v-for="movie in movies" :key="movie.imdbId" @click="redirectToMovieDetails(movie.imdbId)">
                     <MovieSearchItem
                         :title="movie.title"
                         :year="movie.year"

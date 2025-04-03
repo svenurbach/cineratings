@@ -9,6 +9,8 @@ export default defineAppConfig({
       warning: 'yellow',
       error: 'red',
       neutral: 'slate',
+      background: 'gray',
+      app: 'gray',
     }
   },
   mainProvider: 'tmdb',

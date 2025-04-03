@@ -47,7 +47,7 @@ const clearInput = () => {
   </div> -->
   <!-- <UContainer class="mb-10"> -->
   <UButtonGroup
-    class="py-2 w-full mb-6"
+    class="w-full mb-4"
   >
     <UInput
       v-model="movieName"

@@ -1,17 +1,12 @@
-<script setup lang="ts">
-import AppMobileNavbar from '~/components/AppMobileNavbar.vue';
-
-</script>
-
 <template>
-    <!-- <div class="flex justify-center md:bg-slate-300 min-h-screen">
-    <div class="w-full max-w-md p-4 bg-white md:rounded-xl md:shadow-md"> -->
-    <div class="flex flex-col items-center w-full h-screen sm:h-auto bg-white dark:bg-gray-900">
-        <div class="w-full max-w-sm sm:max-w-lg p-4 h-full bg-gray-200 dark:bg-gray-800">
-            <AppHeader />
-            <slot />
-            <AppFooter />
-            <AppMobileNavbar />
+    <div class="h-dvh bg-(--ui-background) dark:bg-(--ui-background) sm:p-5">
+        <div class="h-full flex flex-col overflow-hidden m-auto sm:max-w-lg px-4 pt-3 bg-(--ui-app) dark:bg-(--ui-app) sm:rounded-[calc(var(--ui-radius)*2)]">
+            <AppHeader class="shrink-0"/>
+            <div class="flex-1 overflow-y-auto rounded-(--ui-radius)">
+                <slot />
+            </div>
+            <!-- <AppFooter /> -->
+            <AppMobileNavbar class="shrink-0"/>
         </div>
     </div>
 </template>
