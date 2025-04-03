@@ -108,7 +108,7 @@ export default class DataService {
     return movieRatingRecords;
   }
 
-  private buildCustomRatingRecord(aggregatedMovieRating: string, movieRatingRecords: MovieRatingData[]): MovieRatingData {
+  private buildCustomRatingRecord(aggregatedMovieRating: number, movieRatingRecords: MovieRatingData[]): MovieRatingData {
     const { movieMetadata: { title, year, imdbId, posterUrl, runtime, plot } } = this.getMovieDetailsFromCoreProvider(this.mainProvider, movieRatingRecords);
 
     const customMovieRatingRecord: MovieRatingData = {
@@ -144,10 +144,6 @@ export default class DataService {
     const providerResponses = await Promise.all(
       providers.map(async provider => {
         try {
-          // const cachedData = this.getMovieRatingsFromCache(provider.id, imdbId);
-          // if (cachedData) {
-          //   return cachedData;
-          // }
           return provider.fetchMovie(imdbId);
         } catch (error) {
           console.error(`Fehler bei der Filmsuche mit Provider ${provider}:`, error);
@@ -183,4 +179,5 @@ export default class DataService {
     const cacheKey = providerId + '-' + imdbId;
     setCache(cacheKey, data, 5 * 60 * 1000);
   }
+
 }
