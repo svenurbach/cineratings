@@ -1,5 +1,3 @@
-// Bekommt Datan vom dataService
-// Hier möchte ich die zurückgegebenen Daten der Provider, welcher der User, ausgewählt hat verarbeiten.
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class RatingService {
@@ -13,7 +11,7 @@ export default class RatingService {
         this.userRatingWeight = 0.5;
     }
 
-    public getAggregatedMovieRating(ratingDataRecords: MovieRatingData[]): string {
+    public getAggregatedMovieRating(ratingDataRecords: MovieRatingData[]): number {
         let totalPrimaryRating = 0;
         let totalPrimaryRatingCount = 0;
         let totalUserRating = 0;
@@ -22,15 +20,15 @@ export default class RatingService {
         for (const record of ratingDataRecords) {
             // Berechnung mit dem arithmetische Mittel
             if (record.primaryRating != null) {
-                totalPrimaryRating += Number(record.primaryRating);
+                totalPrimaryRating += record.primaryRating;
                 totalPrimaryRatingCount += 1;
             }
             // Berechnung mit dem gewichteten arithmetischen Mittel (absolute Häufigkeit)
             if (record.userRating != null && record.userVotes != null) {
                 // TODO: Der Wert maxwert muss vom provider kommen
-                totalUserRating += this.normalizeRating(Number(record.userRating), 10)
-                * Number(record.userVotes);
-                totalUserVotes += Number(record.userVotes);
+                totalUserRating += this.normalizeRating(record.userRating, 10)
+                    * record.userVotes;
+                totalUserVotes += record.userVotes;
             }
         }
 
@@ -38,18 +36,19 @@ export default class RatingService {
         const finalUserRating = totalUserRating / totalUserVotes;
 
         if (!finalPrimaryRating) {
-            return finalUserRating.toString();
+            return finalUserRating;
         }
 
         if (!finalUserRating) {
-            return finalPrimaryRating.toString();
+            return finalPrimaryRating;
         }
 
-        // const finalMetaScore = (finalPrimaryRating + finalUserRating) / 2;
-        const finalWeightedMetaScore = (finalPrimaryRating *  this.primaryRatingWeight)
+        // Wenn es nur einen Wert gibt, darf er nicht gewichtet werden
+
+        const finalWeightedMetaScore = (finalPrimaryRating * this.primaryRatingWeight)
         + (finalUserRating * this.userRatingWeight);
 
-        return finalWeightedMetaScore.toFixed(0).toString();
+        return finalWeightedMetaScore;
     }
 
     // Normalize 5.9 to 59

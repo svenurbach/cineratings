@@ -22,6 +22,23 @@ export default defineNuxtConfig({
       stylistic: false
     }
   },
+  app: {
+    head: {
+      title: 'CineRatings',
+      htmlAttrs: {
+        lang: 'de',
+      },
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+      meta: [
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' },
+      ]
+    }
+  },
   nitro: {
     routeRules: {
       '/api/providers/**': {
