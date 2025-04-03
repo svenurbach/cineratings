@@ -16,17 +16,10 @@ export default class ImdbProvider implements MovieRatingProvider {
     async fetchMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
-            // TODO: Was wird mitgegeben?
             const response = await $fetch(`api/providers/omdb-movie`, {
                 query: { imdbId }
             });
 
-            // Check if more than one result was returned
-            // If so, return a list of movies to the view and let the user choose one
-            // Make a id search with the users choice
-
-            // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
-            // TODO: omdbResponse type erstellen
             const movieData = response as {
                 imdbID: string,
                 Title: string,
@@ -42,8 +35,8 @@ export default class ImdbProvider implements MovieRatingProvider {
                 name: this.name,
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
-                userRating: movieData.imdbRating !== 'N/A' ? movieData.imdbRating : undefined,
-                userVotes: movieData.imdbVotes !== 'N/A' ? movieData.imdbVotes : undefined,
+                userRating: movieData.imdbRating !== 'N/A' ? Number(movieData.imdbRating) : undefined,
+                userVotes: movieData.imdbVotes !== 'N/A' ? Number(movieData.imdbVotes) : undefined,
                 movieMetadata: {
                     title: movieData.Title,
                     year: movieData.Year,
@@ -51,12 +44,10 @@ export default class ImdbProvider implements MovieRatingProvider {
                 }
             };
 
-            // TODO: Values mit N/A ersetzen durch null
-
             return providerResponse;
 
         } catch (error) {
-            console.error('Fehler:', error);
+            console.error('Fehler beim fetchen der Daten:', error);
             throw error;
         }
     }

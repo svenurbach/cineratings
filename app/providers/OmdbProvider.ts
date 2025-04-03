@@ -70,7 +70,7 @@ export default class OmdbProvider implements MovieRatingProvider {
                     year: movieData.Year,
                     imdbId: movieData.imdbID,
                     posterUrl: movieData.Poster !== 'N/A' ? movieData.Poster : undefined,
-                    runtime: movieData.Runtime !== 'N/A' ? movieData.Runtime : undefined,
+                    runtime: movieData.Runtime !== 'N/A' ? Number(movieData.Runtime) : undefined,
                     plot: movieData.Plot !== 'N/A' ? movieData.Plot : undefined,
                 }
             };

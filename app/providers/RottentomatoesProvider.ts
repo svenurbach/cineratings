@@ -42,7 +42,7 @@ export default class RottentomatoesProvider implements MovieRatingProvider {
                 name: this.name,
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
-                primaryRating: primaryRating,
+                primaryRating: Number(primaryRating),
                 movieMetadata: {
                     title: movieData.Title,
                     year: movieData.Year,

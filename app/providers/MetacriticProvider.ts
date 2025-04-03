@@ -16,17 +16,10 @@ export default class MetacriticProvider implements MovieRatingProvider {
     async fetchMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
-            // TODO: Was wird mitgegeben?
             const response = await $fetch(`api/providers/omdb-movie`, {
                 query: { imdbId }
             });
 
-            // Check if more than one result was returned
-            // If so, return a list of movies to the view and let the user choose one
-            // Make a id search with the users choice
-
-            // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
-            // TODO: omdbResponse type erstellen
             const movieData = response as {
                 imdbID: string,
                 Title: string,
@@ -36,7 +29,6 @@ export default class MetacriticProvider implements MovieRatingProvider {
                     Value: string,
                 }[],
             };
-
 
             // "Ratings": [
             //     {
@@ -65,15 +57,13 @@ export default class MetacriticProvider implements MovieRatingProvider {
                 name: this.name,
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
-                primaryRating: primaryRating,
+                primaryRating: Number(primaryRating),
                 movieMetadata: {
                     title: movieData.Title,
                     year: movieData.Year,
                     imdbId: movieData.imdbID,
                 }
             };
-
-            // TODO: Values mit N/A ersetzen durch null
 
             return providerResponse;
 

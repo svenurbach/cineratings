@@ -21,8 +21,8 @@ export default class ImdbProvider implements MovieRatingProvider {
             });
 
             const movieData = response as {
-                rating: number,
-                votes: number,
+                rating?: number,
+                votes?: number,
             };
 
             if (!movieData) throw new Error('No movie found');
@@ -32,8 +32,8 @@ export default class ImdbProvider implements MovieRatingProvider {
                 name: this.name,
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
-                userRating: movieData.rating ? movieData.rating.toFixed(1) : undefined,
-                userVotes: movieData.rating ? movieData.votes.toString() : undefined,
+                userRating: movieData.rating,
+                userVotes: movieData.votes,
                 movieMetadata: {
                     title: "no title",
                     year: "no year",
