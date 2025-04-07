@@ -11,13 +11,16 @@ export default defineEventHandler(async (_event) => {
       }
     };
 
-    // TODO: try catch
     try {
         const response = await fetch(url, options);
         if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
 
         const data = await response.json();
-        const movies = data.results.map((movie: { poster_path: string }) => `https://image.tmdb.org/t/p/w300/${movie.poster_path}`)
+        const movies = data.results.map((movie: { poster_path: string, title: string, id: number  }) => ({
+            img: `https://image.tmdb.org/t/p/w342/${movie.poster_path}`,
+            title: movie.title,
+            id: movie.id
+        }));
 
         return movies;
 
