@@ -4,6 +4,7 @@ import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
 const route = useRoute();
 const { ratingDataRecords, getMovie } = useFetchMovie();
+const { add } = useMovieHistory();
 const param = ref(route.query.movieId as string);
 const customRecordMetadata = ref<MovieMetadata>();
 const appConfig = useAppConfig()
@@ -40,7 +41,7 @@ watch(ratingDataRecords, (newValue) => {
         <!-- Image ends -->
         <!-- Buttons start -->
         <button
-          id="back-button" class="absolute top-5 left-5 bg-gray-800 p-2 rounded-full opacity-95"
+          id="back-button" class="absolute top-5 left-5 bg-gray-800 p-2 rounded-full opacity-95 cursor-pointer"
           @click="$router.back()">
           <svg
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -50,7 +51,14 @@ watch(ratingDataRecords, (newValue) => {
         </button>
         <button
           id="like-button" class="absolute top-5 right-5 bg-gray-800 p-2 rounded-full opacity-95"
-          @click="$router.back()">
+          @click="add({
+            title: customRecordMetadata.title,
+            year: customRecordMetadata.year,
+            imdbId: customRecordMetadata.imdbId,
+            posterUrl: customRecordMetadata.posterUrl,
+            rating: customRecord?.primaryRating,
+            timestamp: new Date().toISOString(),
+          })">
           <svg
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="size-6">
