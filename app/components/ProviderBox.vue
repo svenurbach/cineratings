@@ -10,7 +10,7 @@ defineProps<{
 	<div class="flex flex-row p-2">
 		<div class="basis-1/5 shrink-0 flex items-center">
 			<!-- TODO: Link zur externen Moviepage -->
-			<img class="w-8 sm:w-14" :src="data.logoUrl" >
+			<img class="w-8 sm:w-14" :src="data.logoUrl" loading="lazy" :title="`Logo von ${data.name}`" alt="Logo" >
 		</div>
 		<div>
 			<h4 class="line-clamp-1">{{ data.name }}</h4>
