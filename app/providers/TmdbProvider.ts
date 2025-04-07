@@ -27,12 +27,14 @@ export default class TmdbProvider implements MovieRatingProvider {
                 }[]
             };
 
-            const movies: MovieMetadata[] = data.results.map((movie) => ({
-                title: movie.title,
-                year: movie.release_date ? movie.release_date.substring(0, 4) : '', // "2005-10-20"
-                imdbId: movie.id,
-                posterUrl: movie.poster_path ? this.posterBaseURlSmall.concat(movie.poster_path) : undefined,
-            }));
+            const movies: MovieMetadata[] = data.results
+                .filter((movie) => movie.release_date)
+                .map((movie) => ({
+                    title: movie.title,
+                    year: movie.release_date.substring(0, 4), // "2005-10-20"
+                    imdbId: movie.id,
+                    posterUrl: movie.poster_path ? this.posterBaseURlSmall.concat(movie.poster_path) : undefined,
+                }));
 
             return movies;
 
