@@ -19,12 +19,12 @@ export default class RatingService {
 
         for (const record of ratingDataRecords) {
             // Berechnung mit dem arithmetische Mittel
-            if (record.primaryRating != null) {
+            if (record.primaryRating) {
                 totalPrimaryRating += record.primaryRating;
                 totalPrimaryRatingCount += 1;
             }
             // Berechnung mit dem gewichteten arithmetischen Mittel (absolute Häufigkeit)
-            if (record.userRating != null && record.userVotes != null) {
+            if (record.userRating && record.userVotes) {
                 // TODO: Der Wert maxwert muss vom provider kommen
                 totalUserRating += this.normalizeRating(record.userRating, 10)
                     * record.userVotes;
@@ -44,7 +44,6 @@ export default class RatingService {
         }
 
         // Wenn es nur einen Wert gibt, darf er nicht gewichtet werden
-
         const finalWeightedMetaScore = (finalPrimaryRating * this.primaryRatingWeight)
         + (finalUserRating * this.userRatingWeight);
 

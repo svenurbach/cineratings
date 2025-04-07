@@ -36,7 +36,7 @@ export default class ImdbProvider implements MovieRatingProvider {
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
                 userRating: movieData.imdbRating !== 'N/A' ? Number(movieData.imdbRating) : undefined,
-                userVotes: movieData.imdbVotes !== 'N/A' ? Number(movieData.imdbVotes) : undefined,
+                userVotes: movieData.imdbVotes !== 'N/A' ? Number(movieData.imdbVotes.replaceAll(',', '')) : undefined,
                 movieMetadata: {
                     title: movieData.Title,
                     year: movieData.Year,
