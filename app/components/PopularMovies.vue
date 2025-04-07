@@ -23,6 +23,8 @@ items.value = data.value || []
     }"
     class="mx-auto w-full"
   >
-  <ULink :to="{ name: 'movie', query: { movieId: item.id } }" :title="`Zur Detailseite von ${item.title} wechseln`"><img :src="item.img" width="264" height="264" loading="lazy" class="rounded-(--ui-radius)"></ULink>
+  <ULink :to="{ name: 'movie', query: { movieId: item.id } }" :title="`Zur Detailseite von ${item.title} wechseln`"><img :src="item.img" width="264" height="264" loading="lazy" class="rounded-(--ui-radius)">
+  {{ item.title }}
+  </ULink>
   </UCarousel>
 </template>

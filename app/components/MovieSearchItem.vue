@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="relative h-full cursor-pointer hover:sepia">
+    <div class="relative h-full cursor-pointer">
         <!-- TODO: IMG durch SVG ersetzen -->
         <img
         :src="posterUrl || 'images/poster-placeholder.jpg'"
