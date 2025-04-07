@@ -1,8 +1,7 @@
 <script setup lang="ts">
-const items = ref([])
+const items = ref<{ img: string; title: string, id: number }[]>([])
 const { data } = await useFetch('/api/providers/tmdb-popular')
 items.value = data.value || []
-
 </script>
 
 <template>
@@ -24,6 +23,6 @@ items.value = data.value || []
     }"
     class="mx-auto w-full"
   >
-    <img :src="item" width="264" height="264" class="rounded-(--ui-radius)">
+  <ULink :to="{ name: 'movie', query: { movieId: item.id } }" :title="`Zur Detailseite von ${item.title} wechseln`"><img :src="item.img" width="264" height="264" loading="lazy" class="rounded-(--ui-radius)"></ULink>
   </UCarousel>
 </template>
