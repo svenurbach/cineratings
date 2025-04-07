@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const route = useRoute();
-const router = useRouter();
 const param = ref(route.query.movieName as string);
 const { movies, searchMovie } = useMovieSearch();
 
@@ -13,9 +12,6 @@ watch(() => route.query.movieName, (newMovieName) => {
     searchMovie(param.value);
 });
 
-const redirectToMovieDetails = (movieId: string) => {
-    router.push({ path: '/movie', query: { movieId: movieId } });
-};
 </script>
 
 <template>
@@ -27,12 +23,14 @@ const redirectToMovieDetails = (movieId: string) => {
             <p>Bitte einen Film auswählen!</p>
             <ul class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4 rounded-(--ui-radius)">
                 <!-- TODO: Fix text h position -->
-                <li v-for="movie in movies" :key="movie.imdbId" @click="redirectToMovieDetails(movie.imdbId)">
-                    <MovieSearchItem
-                        :title="movie.title"
-                        :year="movie.year"
-                        :poster-url="movie.posterUrl"
-                    />
+                <li v-for="movie in movies" :key="movie.imdbId">
+                    <ULink :to="{ name: 'movie', query: { movieId: movie.imdbId } }" :title="`Zur Detailseite von ${movie.title} wechseln`">
+                        <MovieSearchItem
+                            :title="movie.title"
+                            :year="movie.year"
+                            :poster-url="movie.posterUrl"
+                        />
+                    </ULink>
                 </li>
             </ul>
         </section>
