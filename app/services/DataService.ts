@@ -68,10 +68,43 @@ export default class DataService {
     }
   }
 
-  private getProviderListFromLocalStorage() {
+  // ####################### EINSTIEG #######################
+  private async getMovieData(imdbId: string): Promise<MovieRatingData[]> {
+    let mainProviderNotCheckedFromUser = false;
+    const selectedProviders = this.getProviderListFromLocalStorage();
+
+    // Wenn der Nutzer den MainProvider nicht aktiviert hat, brauchen wir
+    // dennoch die Daten um den CustomRatingRecord zu erstellen
+    if (!selectedProviders.includes(this.mainProvider)) {
+      mainProviderNotCheckedFromUser = true;
+      selectedProviders.push(this.mainProvider);
+    }
+
+    const providers = this.getProviderInstancesFromFactory(selectedProviders);
+
+    // TODO: checkCache
+    let movieRatingRecords = await this.getMovieRatingsFromProviders(imdbId, providers);
+    // SaveCache
+    const movieDetails = this.getMovieDetailsFromCoreProvider(this.mainProvider, movieRatingRecords);
+
+    // MainProviderdaten sind im Record vorhanden. Dürfen aber nicht mit
+    // aggregiert werden, wenn der Nutzer ihn nicht aktiviert hat
+    if (mainProviderNotCheckedFromUser) {
+      movieRatingRecords = movieRatingRecords.filter(record => record.id !== this.mainProvider);
+    }
+
+    const aggregatedMovieRating = this.ratingService.getAggregatedMovieRating(movieRatingRecords);
+
+    const customRatingRecord = this.buildCustomRatingRecord(movieDetails, aggregatedMovieRating, movieRatingRecords);
+    movieRatingRecords.push(customRatingRecord);
+    console.log("movieRatingRecords->customRatingRecord", movieRatingRecords);
+
+    return movieRatingRecords;
+  }
+
+  private getProviderListFromLocalStorage(): string[] {
     // TODO: Get Provider List from LocalStorage
-    const appConfig = useAppConfig();
-    const providers = appConfig.providers;
+    const providers = this.appConfig.providers;
     const allProviders = Object.values(providers).map(provider => provider.id);
 
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
@@ -88,56 +121,9 @@ export default class DataService {
     return allProviders;
   }
 
-  private getSelectedProvidersFromFactory() {
-    const selectedProviders = this.getProviderListFromLocalStorage();
-    const providers = this.providerFactory.createProviders(selectedProviders);
+  private getProviderInstancesFromFactory(providerList: string[]): MovieRatingProvider[] {
+    const providers = this.providerFactory.createProviders(providerList);
     return providers;
-  }
-
-  // ####################### EINSTIEG #######################
-  private async getMovieData(imdbId: string): Promise<MovieRatingData[]> {
-    const providers = this.getSelectedProvidersFromFactory();
-    // TODO: checkCache
-    const movieRatingRecords = await this.getMovieRatingsFromProviders(imdbId, providers);
-    // SaveCache
-    const aggregatedMovieRating = this.ratingService.getAggregatedMovieRating(movieRatingRecords);
-    const customRatingRecord = this.buildCustomRatingRecord(aggregatedMovieRating, movieRatingRecords);
-    movieRatingRecords.push(customRatingRecord);
-    console.log("movieRatingRecords->customRatingRecord", movieRatingRecords);
-
-    return movieRatingRecords;
-  }
-
-  private buildCustomRatingRecord(aggregatedMovieRating: number, movieRatingRecords: MovieRatingData[]): MovieRatingData {
-    const { movieMetadata: { title, year, imdbId, posterUrl, runtime, plot } } = this.getMovieDetailsFromCoreProvider(this.mainProvider, movieRatingRecords);
-
-    const customMovieRatingRecord: MovieRatingData = {
-      id: this.customRatingId,
-      name: this.appTitle,
-      homepageUrl: 'https://www.cineratings.de',
-      primaryRating: aggregatedMovieRating,
-      movieMetadata: {
-        title: title,
-        year: year,
-        imdbId: imdbId,
-        posterUrl: posterUrl,
-        runtime: runtime,
-        plot: plot
-      }
-    };
-
-    return customMovieRatingRecord;
-  }
-
-  private getMovieDetailsFromCoreProvider(mainProviderName: string, providerResponses: MovieRatingData[]): MovieRatingData {
-    // finde in den providerrepsonses den baseprovider anhand des keys
-    const mainProviderData = providerResponses.find(p => p.id === mainProviderName);
-
-    if (!mainProviderData) {
-      throw new Error(`MainProvider nicht gefunden: ${mainProviderName}`);
-    }
-
-    return mainProviderData;
   }
 
   private async getMovieRatingsFromProviders(imdbId: string, providers: MovieRatingProvider[]): Promise<(MovieRatingData)[]> {
@@ -151,17 +137,47 @@ export default class DataService {
         }
       })
     );
-    // CHECK if imdbId is correct
-    // CHECK if year is correct +-1?
-
     // Filtern von null Werten
     const validResponses = providerResponses.filter(response => response !== null);
-    // for (const ratingData of validResponses) {
-    //   console.log("getMovieRatingsFromProviders->ratingData", ratingData);
 
-    //   this.setMovieRatingsToCache(ratingData.id, imdbId, ratingData);
-    // }
     return validResponses;
+  }
+
+  private buildCustomRatingRecord(movieDetails: MovieMetadata ,aggregatedMovieRating: number, movieRatingRecords: MovieRatingData[]): MovieRatingData {
+    const customMovieRatingRecord: MovieRatingData = {
+      id: this.customRatingId,
+      name: this.appTitle,
+      homepageUrl: 'https://www.cineratings.de',
+      primaryRating: aggregatedMovieRating,
+      movieMetadata: {
+        title: movieDetails.title,
+        year: movieDetails.year,
+        imdbId: movieDetails.imdbId,
+        posterUrl: movieDetails.posterUrl,
+        runtime: movieDetails.runtime,
+        plot: movieDetails.plot
+      }
+    };
+
+    return customMovieRatingRecord;
+  }
+
+  private getMovieDetailsFromCoreProvider(mainProviderId: string, providerResponses: MovieRatingData[]): MovieMetadata {
+    const mainProviderData = providerResponses.find(p => p.id === mainProviderId);
+    if (!mainProviderData) {
+      throw new Error(`MainProvider nicht gefunden: ${mainProviderId}`);
+    }
+
+    const movieMetadata: MovieMetadata = {
+      title: mainProviderData.movieMetadata.title,
+      year: mainProviderData.movieMetadata.year,
+      imdbId: mainProviderData.movieMetadata.imdbId,
+      posterUrl: mainProviderData.movieMetadata.posterUrl,
+      runtime: mainProviderData.movieMetadata.runtime,
+      plot: mainProviderData.movieMetadata.plot
+    };
+
+    return movieMetadata;
   }
 
   // TODO: Cache implementieren
@@ -169,7 +185,6 @@ export default class DataService {
     const cacheKey = providerId + '-' + imdbId;
     const cachedData = getCache(cacheKey);
     if (cachedData) {
-      console.log(`[CACHE HIT - CLIENT] cachedData:`, cachedData);
       return cachedData;
     }
     return null;
