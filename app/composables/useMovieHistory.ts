@@ -1,12 +1,13 @@
+export interface MovieHistoryItem {
+    title: string
+    year: string
+    imdbId: string
+    posterUrl?: string
+    rating?: number
+    timestamp: string
+}
+
 export default function () {
-    interface MovieHistoryItem {
-        title: string
-        year: string
-        imdbId: string
-        posterUrl?: string
-        rating?: number
-        timestamp: string
-    }
 
     const movieHistoryKey = 'movie-history'
     const movieHistory = ref<MovieHistoryItem[]>([])
@@ -17,7 +18,13 @@ export default function () {
     }
 
     function add(movieItem: MovieHistoryItem) {
-        movieHistory.value.push(movieItem)
+        const today = new Date().toISOString().split('T')[0]
+        const alreadyExists = movieHistory.value.some(
+            item => item.imdbId === movieItem.imdbId && item.timestamp.startsWith(today)
+        )
+        if (!alreadyExists) {
+            movieHistory.value.unshift(movieItem)
+        }
     }
 
     function saveToLocalStorage() {
