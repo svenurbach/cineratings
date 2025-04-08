@@ -47,7 +47,9 @@ export default class MetacriticProvider implements MovieRatingProvider {
 
             if (!movieData) throw new Error('No movie found');
 
-            const metacriticRating = movieData.Ratings.find((rating) => rating.Source === 'Metacritic')?.Value;
+            const metacriticRating = movieData.Ratings
+                ? movieData.Ratings.find((rating) => rating.Source === 'Metacritic')?.Value
+                : undefined;
             const primaryRating = metacriticRating && metacriticRating !== 'N/A'
                 ? metacriticRating.split('/')[0]
                 : undefined;

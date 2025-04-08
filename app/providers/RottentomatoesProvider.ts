@@ -32,7 +32,9 @@ export default class RottentomatoesProvider implements MovieRatingProvider {
 
             if (!movieData) throw new Error('No movie found');
 
-            const rtRating = movieData.Ratings.find((rating) => rating.Source === 'Rotten Tomatoes')?.Value;
+            const rtRating = movieData.Ratings
+                ? movieData.Ratings.find((rating) => rating.Source === 'Rotten Tomatoes')?.Value
+                : undefined;
             const primaryRating = rtRating && rtRating !== 'N/A'
                 ? rtRating.split('%')[0]
                 : undefined;
