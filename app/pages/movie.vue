@@ -17,7 +17,18 @@ const togglePopover = () => {
 };
 
 onMounted(() => {
-  getMovie(param.value);
+  getMovie(param.value).then(() => {
+    if (customRecordMetadata.value && customRecord.value) {
+      add({
+        title: customRecordMetadata.value.title,
+        year: customRecordMetadata.value.year,
+        imdbId: customRecordMetadata.value.imdbId,
+        posterUrl: customRecordMetadata.value.posterUrl,
+        rating: customRecord.value.primaryRating,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
 
 });
 
@@ -40,40 +51,20 @@ watch(ratingDataRecords, (newValue) => {
           class="w-full shadow-lg rounded-[calc(var(--ui-radius)*2)]">
         <!-- Image ends -->
         <!-- Buttons start -->
-        <button
-          id="back-button" class="absolute top-5 left-5 bg-gray-800 p-2 rounded-full opacity-95 cursor-pointer"
-          @click="$router.back()">
-          <svg
-            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-          </svg>
-        </button>
-        <button
-          id="like-button" class="absolute top-5 right-5 bg-gray-800 p-2 rounded-full opacity-95"
-          @click="add({
-            title: customRecordMetadata.title,
-            year: customRecordMetadata.year,
-            imdbId: customRecordMetadata.imdbId,
-            posterUrl: customRecordMetadata.posterUrl,
-            rating: customRecord?.primaryRating,
-            timestamp: new Date().toISOString(),
-          })">
-          <svg
-            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-6">
-            <path
-              stroke-linecap="round" stroke-linejoin="round"
-              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-          </svg>
-        </button>
+        <UButton
+          class="absolute top-5 left-5 bg-(--ui-secondary) rounded-full opacity-98 cursor-pointer"
+          icon="i-heroicons-arrow-left"
+          type="button"
+          size="xl"
+          @click="$router.back()"
+        />
         <!-- Buttons end -->
 
         <!-- Overlay starts -->
         <div class="flex flex-col justify-between absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)]">
 
           <!-- Modal starts -->
-          <div v-if="isOpen" id="movie-ratings" class="p-3 mb-3 bg-gray-400 dark:bg-gray-800 bg-opacity-95 rounded-lg">
+          <div v-if="isOpen" id="movie-ratings" class="p-3 mb-3 text-(--ui-bg) bg-(--ui-secondary) opacity-98 rounded-lg">
               <h3>Anbieter</h3>
               <template v-for="record in ratingDataRecords" :key="record.id">
                 <ProviderBox v-if="(record.primaryRating || record.userRating) && record.name !== appTitle" :data="record" />
@@ -85,7 +76,7 @@ watch(ratingDataRecords, (newValue) => {
           <!-- Movie Meta starts -->
           <div
           id="movie-meta" :data-imdb=customRecordMetadata.imdbId
-          class="flex flex-row justify-between bg-(--ui-neutral) bg-opacity-95 rounded-lg p-3">
+          class="flex flex-row justify-between text-(--ui-bg) bg-(--ui-secondary) opacity-98 rounded-lg p-3">
             <div class="basis-3/4">
               <SingleMovieDetail :detail="customRecordMetadata.title" class="text-lg/6 font-bold" />
               <SingleMovieDetail :detail="customRecordMetadata.year" />
