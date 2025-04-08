@@ -1,3 +1,7 @@
 <template>
-    <ProviderList />
+    <div>
+        <PageHeader title="Einstellungen" />
+        <ProviderList />
+        <ColorModeButton />
+    </div>
 </template>
