@@ -8,15 +8,15 @@
     --font-heading: Arial, sans-serif;
   }
 
-:root {
-    --ui-primary: var(--ui-color-primary-500);
+:root { /* Light */
+    --ui-radius: var(--radius-lg);
+    --ui-primary: var(--ui-color-primary-700);
     --ui-secondary: var(--ui-color-secondary-500);
     --ui-success: var(--ui-color-success-500);
     --ui-info: var(--ui-color-info-500);
     --ui-warning: var(--ui-color-warning-500);
     --ui-error: var(--ui-color-error-500);
     --ui-neutral: var(--ui-color-neutral-300);
-    --ui-radius: var(--radius-lg);
     --ui-background: var(--ui-color-background-200);
     --ui-app: var(--ui-color-app-50);
 }
@@ -33,16 +33,20 @@
     --ui-app: var(--ui-color-app-800);
 }
 
+h1 {
+    @apply text-2xl pb-2 text-(--ui-secondary);
+}
+
 h2 {
-    @apply text-xl pb-2 font-bold text-(--ui-primary);
+    @apply text-xl pt-3 pb-1 font-bold text-(--ui-primary);
 }
 
 h3 {
-    @apply text-lg font-bold text-(--ui-secondary);
+    @apply text-lg font-bold text-(--ui-app);
 }
 
 h4 {
-    @apply font-bold text-(--ui-secondary);
+    @apply font-bold text-(--ui-app);
 }
 
 p {
