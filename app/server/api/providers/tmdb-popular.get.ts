@@ -16,9 +16,10 @@ export default defineEventHandler(async (_event) => {
         if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
 
         const data = await response.json();
-        const movies = data.results.map((movie: { poster_path: string, title: string, id: number  }) => ({
+        const movies = data.results.map((movie: { poster_path: string, title: string, release_date: string, id: number  }) => ({
             img: `https://image.tmdb.org/t/p/w342/${movie.poster_path}`,
             title: movie.title,
+            year: movie.release_date.split('-')[0],
             id: movie.id
         }));
 
