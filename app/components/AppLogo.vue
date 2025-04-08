@@ -1,6 +1,5 @@
 <template>
-    <ULink to="/" class="h-full">
-        <!-- <img class="h-full" src="~/assets/images/cr-logo.png" alt="Logo" /> -->
+    <ULink to="/">
         <svg
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-full stroke-(--ui-primary)">
             <path

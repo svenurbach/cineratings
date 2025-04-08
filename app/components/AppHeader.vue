@@ -6,10 +6,9 @@ const $route = useRoute()
 </script>
 
 <template>
-    <div class="flex justify-between items-center mb-3 h-10">
-        <AppLogo />
-        <h1 class="text-2xl"><a href="/">{{ appTitle }}</a></h1>
-        <AppMenu />
+    <div class="grid grid-cols-3 items-center mb-3 h-10">
+        <AppLogo class="h-10"/>
+        <div class="justify-self-center text-2xl"><a href="/" class="h-full">{{ appTitle }}</a></div>
     </div>
     <SearchInput v-if="$route.path === '/' || $route.path === '/search'" class="mt-3" />
 </template>

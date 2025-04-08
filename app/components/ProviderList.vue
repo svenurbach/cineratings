@@ -19,9 +19,9 @@ watch(selectedProviders, (newVal) => {
 </script>
 
 <template>
-    <section id="provider-list" class="border border-solid border-black">
-        <h3>Anbieter</h3>
-        <p>Wähle die Anbieter aus, welche für den Metascore einbeziehen möchtest. </p>
+    <section id="provider-list">
+        <h2>Anbieter</h2>
+        <p>Wähle die Anbieter aus, welche für die Metascore-Berechnung genutzt werden sollen. </p>
         <div class="p-2">
             <div v-if="isLoading">Wird geladen ...</div>
             <ul v-else>
