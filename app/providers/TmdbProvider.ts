@@ -17,7 +17,6 @@ export default class TmdbProvider implements MovieRatingProvider {
                 query: { query }
             });
 
-            // TODO: Assertion nicht typ sicher. Nochmal prüfen
             const data = response as {
                 results: {
                     title: string;
@@ -28,7 +27,7 @@ export default class TmdbProvider implements MovieRatingProvider {
             };
 
             const movies: MovieMetadata[] = data.results
-                .filter((movie) => movie.release_date)
+                .filter((movie) => movie.release_date && movie.poster_path)
                 .map((movie) => ({
                     title: movie.title,
                     year: movie.release_date.substring(0, 4), // "2005-10-20"
@@ -50,11 +49,6 @@ export default class TmdbProvider implements MovieRatingProvider {
             const response = await $fetch(`api/providers/tmdb-movie`, {
                 query: { query }
             });
-
-            // Check if more than one result was returned
-            // If so, return a list of movies to the view and let the user choose one
-            // Make a id search with the users choice
-
 
             // Assertion eingesetzt, damit TypeScript weiß, dass es sich um ein Objekt mit bestimmten Eigenschaften handelt
             const movieData = (response as {
@@ -83,7 +77,7 @@ export default class TmdbProvider implements MovieRatingProvider {
                     title: movieData.title,
                     year: movieData.release_date.substring(0, 4) ?? "Unknown", // "2005-10-20"
                     imdbId: query,
-                    posterUrl: this.posterBaseURlMedium.concat(movieData.poster_path),
+                    posterUrl: movieData.poster_path ? this.posterBaseURlMedium.concat(movieData.poster_path) : undefined,
                     runtime: movieData.runtime,
                     plot: movieData.overview ?? "No plot available"
                 }
