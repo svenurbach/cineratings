@@ -1,7 +1,10 @@
+import ProviderFactory from '~/factories/ProviderFactory';
+import DataService from '~/services/DataService';
+import RatingService from '~/services/RatingService';
 import type { MovieMetadata } from '../interfaces/MovieMetadata';
 
 export function useMovieSearch() {
-    const { $dataService } = useNuxtApp();
+    const $dataService = new DataService(new ProviderFactory(), new RatingService());
     const movies = ref<MovieMetadata[] | null>(null);
 
     async function getMovieList(movieName: string) {

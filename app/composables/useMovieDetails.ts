@@ -1,11 +1,14 @@
+import ProviderFactory from '~/factories/ProviderFactory';
+import DataService from '~/services/DataService';
+import RatingService from '~/services/RatingService';
 import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
-export function useFetchMovie() {
-    const { $dataService } = useNuxtApp();
+export function useMovieDetails() {
+    const dataService = new DataService(new ProviderFactory(), new RatingService());
     const ratingDataRecords = ref<MovieRatingData[] | null>(null);
 
     async function getMovie(imdbId: string) {
-        if (!imdbId) throw new Error('Query cannot be empty');
+        if (!imdbId) throw new Error('Query darf nicht leer sein');
 
         // TMDB liefert in der Suche keine IMDB ID zurück, sondern eine TMDB ID
         // Daher muss mit der TMDB ID zunächst die IMDB ID abgefragt werden
@@ -16,18 +19,19 @@ export function useFetchMovie() {
                 const data = response as { imdb_id: string };
                 imdbId = data.imdb_id;
             } catch (error) {
-                console.error('Fehler beim Abrufen des Films:', error);
+                console.error('Fehler beim abrufen der IMDB-ID:', error);
             }
         }
 
         try {
             console.log('useFetchMovie > getMovie > imdbId', imdbId);
 
-            const response: MovieRatingData[] = await $dataService.getMovieData(imdbId);
+            const response: MovieRatingData[] = await dataService.getMovieData(imdbId);
             ratingDataRecords.value = response;
         } catch (error) {
-            console.error('Fehler beim Abrufen des Films:', error);
+            console.error('Fehler beim abrufen des Films:', error);
         }
     };
+
     return { ratingDataRecords, getMovie };
 }
