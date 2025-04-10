@@ -2,14 +2,13 @@ export default defineAppConfig({
   title: 'CineRatings',
   ui: {
     colors: {
-      primary: 'violet',
-      secondary: 'orange',
+      primary: 'red',
+      secondary: 'neutral',
       success: 'green',
       info: 'blue',
       warning: 'yellow',
       error: 'red',
       neutral: 'slate',
-      background: 'gray',
       app: 'gray',
     }
   },
@@ -23,5 +22,4 @@ export default defineAppConfig({
     { id: 'metacritic', name: 'Metacritic'},
     { id: 'trakt', name: 'Trakt API'}
   ]
-
 });
