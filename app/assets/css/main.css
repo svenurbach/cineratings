@@ -17,8 +17,7 @@
     --ui-warning: var(--ui-color-warning-500);
     --ui-error: var(--ui-color-error-500);
     --ui-neutral: var(--ui-color-neutral-300);
-    --ui-background: var(--ui-color-background-200);
-    --ui-app: var(--ui-color-app-50);
+    --ui-app: var(--ui-color-app-100);
 }
 
 .dark {
@@ -29,7 +28,6 @@
     --ui-warning: var(--ui-color-warning-400);
     --ui-neutral: var(--ui-color-neutral-800);
     --ui-error: var(--ui-color-error-400);
-    --ui-background: var(--ui-color-background-900);
     --ui-app: var(--ui-color-app-800);
 }
 
