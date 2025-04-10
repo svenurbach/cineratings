@@ -17,9 +17,13 @@ export function useMovieDetails() {
             try {
                 const response = await $fetch(`api/providers/tmdb-get-imdb-id`, { query: { tmdbId } });
                 const data = response as { imdb_id: string };
+                if (!data || !data.imdb_id) {
+                    throw new Error('IMDB ID nicht gefunden');
+                }
                 imdbId = data.imdb_id;
             } catch (error) {
                 console.error('Fehler beim abrufen der IMDB-ID:', error);
+                return;
             }
         }
 
