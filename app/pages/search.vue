@@ -37,9 +37,10 @@ watch(
         <section v-else class="mt-4">
             <div v-if="isLoading" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4 rounded-(--ui-radius)">
                 <div v-for="i in 9" :key="i"  class="flex flex-col gap-1 aspect-2/3 w-full h-50">
-                    <USkeleton class="h-[70%] bg-gray-300" />
-                    <USkeleton class="h-[30%] bg-gray-300" />
+                    <USkeleton class="h-[70%] bg-(--ui-bg)" />
+                    <USkeleton class="h-[30%] bg-(--ui-bg)" />
                 </div>
+                <div class="sr-only">Lade Suchergebnisse ...</div>
             </div>
             <p v-else>Keine Ergebnisse gefunden</p>
         </section>
