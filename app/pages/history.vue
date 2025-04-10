@@ -32,8 +32,8 @@ onMounted(() => {
             <h2>{{ date }}</h2>
             <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 <li v-for="record in records" :key="record.timestamp">
-                    <ULink :to="{ name: 'movie', query: { movieId: record.imdbId } }" :title="`Zur Detailseite von ${record.title} wechseln`">
-                        <MovieSearchItem
+                    <ULink :to="{ name: 'movie', query: { id: record.imdbId } }" :title="`Zur Detailseite von ${record.title} wechseln`">
+                        <MovieItem
                             :title="record.title"
                             :year="record.year"
                             :poster-url="record.posterUrl"

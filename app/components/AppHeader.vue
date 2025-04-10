@@ -10,5 +10,5 @@ const $route = useRoute()
         <AppLogo class="h-10"/>
         <div class="justify-self-center text-2xl"><a href="/" class="h-full">{{ appTitle }}</a></div>
     </div>
-    <SearchInput v-if="$route.path === '/' || $route.path === '/search'" class="mt-3" />
+    <MovieSearchInput v-if="$route.path === '/' || $route.path === '/search'" class="mt-3" />
 </template>

@@ -3,9 +3,9 @@ import type { MovieMetadata } from '~/interfaces/MovieMetadata';
 import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
 const route = useRoute();
-const { ratingDataRecords, getMovie } = useFetchMovie();
+const param = ref(route.query.id);
+const { ratingDataRecords, getMovie } = useMovieDetails();
 const { add } = useMovieHistory();
-const param = ref(route.query.movieId as string);
 const customRecordMetadata = ref<MovieMetadata>();
 const appConfig = useAppConfig()
 const appTitle = appConfig.title;
@@ -78,8 +78,8 @@ watch(ratingDataRecords, (newValue) => {
           id="movie-meta" :data-imdb=customRecordMetadata.imdbId
           class="flex flex-row justify-between text-(--ui-bg) bg-(--ui-secondary) opacity-98 rounded-lg p-3">
             <div class="basis-3/4">
-              <SingleMovieDetail :detail="customRecordMetadata.title" class="text-lg/6 font-bold" />
-              <SingleMovieDetail :detail="customRecordMetadata.year" />
+              <MovieDetail :detail="customRecordMetadata.title" class="text-lg/6 font-bold" />
+              <MovieDetail :detail="customRecordMetadata.year" />
             </div>
             <div v-if="customRecord && customRecord.primaryRating" id="custom-rating" class="grid grid-flow-col content-center items-center gap-1 cursor-pointer" @click="togglePopover">
                 <div
@@ -90,7 +90,7 @@ watch(ratingDataRecords, (newValue) => {
                 }"
                 class="text-xl font-bold p-3 rounded-lg"
                 >
-                <SingleMovieDetail :detail="customRecord.primaryRating.toFixed(0)" />
+                <MovieDetail :detail="customRecord.primaryRating.toFixed(0)" />
                 </div>
             </div>
           </div>

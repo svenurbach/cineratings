@@ -8,7 +8,7 @@ const performMovieSearch = () => {
   // if (router.currentRoute.value.path !== targetPage) {
   // }
     // searchMovie(movieName.value);
-  router.push({ path: targetPage, query: { movieName: movieName.value } });
+  router.push({ path: targetPage, query: { title: movieName.value } });
 };
 
 const clearInput = () => {

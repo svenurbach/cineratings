@@ -23,8 +23,8 @@ items.value = data.value || []
     }"
     class="mx-auto w-full"
   >
-    <ULink :to="{ name: 'movie', query: { movieId: item.id } }" :title="`Zur Detailseite von ${item.title} wechseln`">
-      <MovieSearchItem
+    <ULink :to="{ name: 'movie', query: { id: item.id } }" :title="`Zur Detailseite von ${item.title} wechseln`">
+      <MovieItem
         :title="item.title"
         :year="item.year"
         :poster-url="item.img"

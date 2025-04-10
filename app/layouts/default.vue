@@ -5,7 +5,7 @@
             <div class="flex-1 overflow-y-auto rounded-(--ui-radius)">
                 <slot />
             </div>
-            <AppMobileNavbar />
+            <AppNavbar />
         </div>
     </div>
 </template>

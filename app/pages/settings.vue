@@ -2,6 +2,6 @@
     <div>
         <PageHeader title="Einstellungen" />
         <ProviderList />
-        <ColorModeButton />
+        <AppThemeButton />
     </div>
 </template>

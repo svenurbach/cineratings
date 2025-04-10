@@ -14,13 +14,13 @@ defineProps<{
 		</div>
 		<div>
 			<h3 class="line-clamp-1">{{ data.name }}</h3>
-			<SingleMovieDetail v-if="data.primaryRating" :label="'Bewertung'" :detail="data.primaryRating" />
-			<SingleMovieDetail
+			<MovieDetail v-if="data.primaryRating" :label="'Bewertung'" :detail="data.primaryRating" />
+			<MovieDetail
 				v-if="data.userRating"
 				:label="'Nutzerbewertung'"
 				:detail="data.userRating.toFixed(1)"
 			/>
-			<SingleMovieDetail v-if="data.userVotes" :label="'Nutzerstimmen'" :detail="data.userVotes" />
+			<MovieDetail v-if="data.userVotes" :label="'Nutzerstimmen'" :detail="data.userVotes" />
 		</div>
 	</div>
 </template>

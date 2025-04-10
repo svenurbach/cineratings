@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
   const tmdbBearerToken = config.tmdbBearerToken;
 
 	const query = getQuery(event);
-	const movieName = query.query as string;
+	const movieName = query.query;
 
 	if (!movieName) {
 		throw createError({
