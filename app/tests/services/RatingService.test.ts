@@ -1,6 +1,7 @@
 import { beforeEach, describe, it, test, expect } from 'vitest';
 import RatingService from '../../services/RatingService';
-import type { MovieRatingData } from '~/interfaces/MovieRatingData';
+import type { MovieRatingProviderInfo } from '~/interfaces/MovieRatingProviderInfo';
+import type { MovieMetadata } from '~/interfaces/MovieMetadata';
 
 describe('RatingService.normalizeRating', () => {
     let ratingService: RatingService;
@@ -25,136 +26,95 @@ describe('RatingService.normalizeRating', () => {
         });
 });
 
-describe('RatingService.getMaxUserVoting', () => {
-    let ratingService: RatingService;
-
-    beforeEach(() => {
-        ratingService = new RatingService();
-    });
-
-    const ratingData = [{
-        id: "tmdb",
-        name: "The Movie Database (TMDB)",
-        homepageUrl: "https://www.themoviedb.org/",
-        logoUrl: undefined,
-        primaryRating: "72",
-        userRating: "6.8",
-        userVotes: "5000",
-        movieMetadata: {
-            title: "test",
-            year: "2016",
-            imdbId: "tt4992060",
-            posterUrl: undefined
-        }
-    },
-    {
-        id: "omdb",
-        name: "The Movie Database (TMDB)",
-        homepageUrl: "https://www.themoviedb.org/",
-        logoUrl: undefined,
-        primaryRating: "68",
-        userRating: "8.6",
-        userVotes: "500",
-        movieMetadata: {
-            title: "test",
-            year: "2016",
-            imdbId: "tt4992060",
-            posterUrl: undefined
-        }
-    }]
-
-    it('should return the max user voting', () => {
-        const result = ratingService.getMaxUserVoting(ratingData);
-        expect(result).toBe(5000);
-    });
-});
-
 describe('RatingService.getAggregatedMovieRating', () => {
     let ratingService: RatingService;
+    const providerTemplate: MovieRatingProviderInfo = {
+        id: "test-id",
+        name: "test-name",
+        homepageUrl: "test-url"
+    };
+    const metadataTemplate: MovieMetadata = {
+        title: "test-title",
+        year: "test-year",
+        imdbId: "test-imdb-id"
+    };
 
     beforeEach(() => {
         ratingService = new RatingService();
     });
 
-    test.each([
-        [{
-            id: "tmdb",
-            name: "The Movie Database (TMDB)",
-            homepageUrl: "https://www.themoviedb.org/",
-            logoUrl: undefined,
-            primaryRating: "72",
-            userRating: "6.8",
-            userVotes: "5000",
-            movieMetadata: {
-                title: "The Dark Knight",
-                year: "2008",
-                imdbId: "tt0468569",
-                posterUrl: undefined
-            }
+    const values = [
+        {
+            ratingData: [
+                { ...providerTemplate, movieMetadata: { ...metadataTemplate } },
+            ],
+            expected: 0
         },
         {
-            id: "omdb",
-            name: "The Movie Database (OMDB)",
-            homepageUrl: "https://www.omdbapi.com/",
-            logoUrl: undefined,
-            primaryRating: "85",
-            userRating: "9.0",
-            userVotes: "10000",
-            movieMetadata: {
-                title: "Inception",
-                year: "2010",
-                imdbId: "tt1375666",
-                posterUrl: undefined
-            }
+            ratingData: [
+                { ...providerTemplate, primaryRating: 80, movieMetadata: { ...metadataTemplate } }
+            ],
+            expected: 80
         },
         {
-            id: "rottentomatoes",
-            name: "Rotten Tomatoes",
-            homepageUrl: "https://www.rottentomatoes.com/",
-            logoUrl: undefined,
-            primaryRating: "92",
-            userRating: "8.4",
-            userVotes: "3500",
-            movieMetadata: {
-                title: "Interstellar",
-                year: "2014",
-                imdbId: "tt0816692",
-                posterUrl: undefined
-            }
+            ratingData: [
+                { ...providerTemplate, userRating: 6, userVotes: 100, movieMetadata: { ...metadataTemplate } }
+            ],
+            expected: 60
         },
         {
-            id: "metacritic",
-            name: "Metacritic",
-            homepageUrl: "https://www.metacritic.com/",
-            logoUrl: undefined,
-            primaryRating: "77",
-            userRating: "7.5",
-            userVotes: "2800",
-            movieMetadata: {
-                title: "The Matrix",
-                year: "1999",
-                imdbId: "tt0133093",
-                posterUrl: undefined
-            }
+            ratingData: [
+                { ...providerTemplate, primaryRating: 80, movieMetadata: { ...metadataTemplate } },
+                { ...providerTemplate, primaryRating: 50, movieMetadata: { ...metadataTemplate } }
+            ],
+            expected: 65
         },
         {
-            id: "filmratings",
-            name: "FilmRatings",
-            homepageUrl: "https://www.filmratings.com/",
-            logoUrl: undefined,
-            primaryRating: "79",
-            userRating: "7.8",
-            userVotes: "4000",
-            movieMetadata: {
-                title: "The Shawshank Redemption",
-                year: "1994",
-                imdbId: "tt0111161",
-                posterUrl: undefined
+            ratingData: [
+                { ...providerTemplate, userRating: 6, userVotes: 100, movieMetadata: { ...metadataTemplate } },
+                { ...providerTemplate, userRating: 8, userVotes: 100, movieMetadata: { ...metadataTemplate } }
+            ],
+            expected: 70
+        },
+        {
+            ratingData: [
+                { ...providerTemplate, primaryRating: 50, movieMetadata: { ...metadataTemplate } },
+                { ...providerTemplate, userRating: 6, userVotes: 5000, movieMetadata: { ...metadataTemplate } },
+            ],
+            expected: 55
+        },
+        {
+            ratingData: [
+                { ...providerTemplate, userRating: 6, movieMetadata: { ...metadataTemplate } },
+            ],
+            expected: 0
+        },
+        {
+            ratingData: [
+                { ...providerTemplate, userVotes: 5000, movieMetadata: { ...metadataTemplate } },
+            ],
+            expected: 0
+        },
+    ]
+
+    for (const { ratingData, expected } of values) {
+        const extractedRatingData = ratingData.map(item => {
+            const ratings: string[] = [];
+            if ('primaryRating' in item) {
+                ratings.push(`PR:${item.primaryRating}`);
             }
-        }],
-    ])('should return the aggregated movie rating',
-        (ratingData) => {
-            const result = ratingService.getAggregatedMovieRating([ratingData]);
-            expect(result).toBe("70");
+            if ('userRating' in item) {
+                ratings.push(`UR:${item.userRating}`);
+            }
+            if ('userVotes' in item) {
+                ratings.push(`UV:${item.userVotes}`);
+            }
+            return ratings;
         });
+
+        it(`should return aggregated rating for ${JSON.stringify(extractedRatingData)} to be ${expected}`, () => {
+            const result = ratingService.getAggregatedMovieRating(ratingData);
+            expect(result).toBe(expected);
+        });
+    }
 });
