@@ -11,6 +11,11 @@ export default class RatingService {
         this.userRatingWeight = 0.5;
     }
 
+    /**
+     * Berechnet die aggregierte Bewertung eines Films basierend auf den bereitgestellten Bewertungsdaten.
+     * @param ratingDataRecords Eine Liste von Bewertungsdaten für den Film.
+     * @returns Die aggregierte Bewertung des Films als Zahl.
+     */
     public getAggregatedMovieRating(ratingDataRecords: MovieRatingData[]): number {
         let totalPrimaryRating = 0;
         let totalPrimaryRatingCount = 0;
@@ -35,6 +40,10 @@ export default class RatingService {
         const finalPrimaryRating = totalPrimaryRating / totalPrimaryRatingCount;
         const finalUserRating = totalUserRating / totalUserVotes;
 
+        if (!finalPrimaryRating && !finalUserRating) {
+            return 0;
+        }
+
         if (!finalPrimaryRating) {
             return finalUserRating;
         }
@@ -43,14 +52,18 @@ export default class RatingService {
             return finalPrimaryRating;
         }
 
-        // Wenn es nur einen Wert gibt, darf er nicht gewichtet werden
         const finalWeightedMetaScore = (finalPrimaryRating * this.primaryRatingWeight)
         + (finalUserRating * this.userRatingWeight);
 
         return finalWeightedMetaScore;
     }
 
-    // Normalize 5.9 to 59
+    /**
+     * Normalisiert eine Bewertung auf eine Skala von 0 bis `ownMaxRating`.
+     * @param rating Die ursprüngliche Bewertung.
+     * @param maxRating Der maximale Wert der ursprünglichen Bewertungsskala.
+     * @returns Die normalisierte Bewertung.
+     */
     public normalizeRating(rating: number, maxRating: number): number {
         const normalizedRating = (rating / maxRating) * this.ownMaxRating
         return normalizedRating;

@@ -1,10 +1,3 @@
-// Bekommt von der ProviderFactory die ausgewählten Provider
-// Bekommt von der View den Film
-// Prüft ob es Filmdaten im Cache gibt
-// Wenn ja, dann gebe die Filmdaten zurück
-// Wenn nein, dann hole die Filmdaten vom Provider
-// Speichere die Filmdaten im Cache
-// Gebe die Filmdaten zurück
 import type ProviderFactory from '../factories/ProviderFactory';
 import type RatingService from './RatingService';
 import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
@@ -29,6 +22,11 @@ export default class DataService {
     this.ratingService = ratingService;
   }
 
+  /**
+   * Ruft eine Liste von Filmen vom Hauptanbieter basierend auf dem Filmtitel ab.
+   * @param movieName Der Name des Films, nach dem gesucht werden soll.
+   * @returns Eine Liste von Filmdaten oder null, falls kein Anbieter gefunden wurde.
+   */
   public async getMovieListFromMainProvider(movieName: string): Promise<MovieMetadata[] | null> {
     const providers = this.providerFactory.createProviders([this.mainProvider]);
 
@@ -49,7 +47,11 @@ export default class DataService {
     }
   }
 
-  // ####################### EINSTIEG #######################
+  /**
+   * Ruft die Daten eines Films basierend auf der IMDb-ID ab.
+   * @param imdbId Die IMDb-ID des Films.
+   * @returns Eine Liste von Bewertungsdaten, einschließlich eines benutzerdefinierten Bewertungsdatensatzes.
+   */
   public async getMovieData(imdbId: string): Promise<MovieRatingData[]> {
     let mainProviderNotCheckedFromUser = false;
     const selectedProviders = this.getProviderListFromLocalStorage();
@@ -75,7 +77,7 @@ export default class DataService {
     }
 
     const aggregatedMovieRating = this.ratingService.getAggregatedMovieRating(movieRatingRecords);
-    const customRatingRecord = this.buildCustomRatingRecord(movieDetails, aggregatedMovieRating, movieRatingRecords);
+    const customRatingRecord = this.buildCustomRatingRecord(movieDetails, aggregatedMovieRating);
     movieRatingRecords.push(customRatingRecord);
 
     console.log("movieRatingRecords(+customRatingRecord)", movieRatingRecords);
@@ -83,6 +85,10 @@ export default class DataService {
     return movieRatingRecords;
   }
 
+  /**
+   * Ruft die Liste der ausgewählten Anbieter aus dem lokalen Browserspeicher ab.
+   * @returns Eine Liste von Anbieter-IDs.
+   */
   private getProviderListFromLocalStorage(): string[] {
     const providers = this.appConfig.providers;
     const allProviders = Object.values(providers).map(provider => provider.id);
@@ -102,16 +108,27 @@ export default class DataService {
     return allProviders;
   }
 
+  /**
+   * Erstellt Instanzen von Anbietern basierend auf einer Liste von Anbieter-IDs.
+   * @param providerList Eine Liste von Anbieter-IDs.
+   * @returns Eine Liste von Anbieterinstanzen.
+   */
   private getInstancesFromProviderFactory(providerList: string[]): MovieRatingProvider[] {
     const providers = this.providerFactory.createProviders(providerList);
     return providers;
   }
 
+  /**
+   * Ruft die Bewertungsdaten eines Films von mehreren Anbietern ab.
+   * @param imdbId Die IMDb-ID des Films.
+   * @param providers Eine Liste von Anbieterinstanzen.
+   * @returns Eine Liste von Bewertungsdaten, gefiltert nach gültigen Antworten.
+   */
   private async getMovieRatingsFromProviders(imdbId: string, providers: MovieRatingProvider[]): Promise<(MovieRatingData)[]> {
     const providerResponses = await Promise.all(
       providers.map(async provider => {
         try {
-          return provider.fetchMovie(imdbId);
+          return provider.getMovie(imdbId);
         } catch (error) {
           console.error(`Fehler bei der Filmsuche mit Provider ${provider}:`, error);
           return null;
@@ -124,6 +141,12 @@ export default class DataService {
     return validResponses;
   }
 
+  /**
+   * Erstellt einen benutzerdefinierten Bewertungsdatensatz basierend auf den Filmdetails und aggregierten Bewertungen.
+   * @param movieDetails Die Metadaten des Films.
+   * @param aggregatedMovieRating Die aggregierte Bewertung des Films.
+   * @returns Ein benutzerdefinierter Bewertungsdatensatz.
+   */
   private buildCustomRatingRecord(movieDetails: MovieMetadata, aggregatedMovieRating: number): MovieRatingData {
     const customMovieRatingRecord: MovieRatingData = {
       id: this.customRatingId,
@@ -143,6 +166,13 @@ export default class DataService {
     return customMovieRatingRecord;
   }
 
+  /**
+   * Ruft die Metadaten eines Films vom Hauptanbieter ab.
+   * @param mainProviderId Die ID des Hauptanbieters.
+   * @param providerResponses Eine Liste von Anbieterantworten.
+   * @returns Die Metadaten des Films.
+   * @throws Fehler, wenn der Hauptanbieter nicht gefunden wird.
+   */
   private getMovieMetadataFromMainProvider(mainProviderId: string, providerResponses: MovieRatingData[]): MovieMetadata {
     const mainProviderData = providerResponses.find(p => p.id === mainProviderId);
     if (!mainProviderData) {
