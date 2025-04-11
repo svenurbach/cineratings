@@ -7,7 +7,7 @@ export function useMovieDetails() {
     const dataService = new DataService(new ProviderFactory(), new RatingService());
     const ratingDataRecords = ref<MovieRatingData[] | null>(null);
 
-    async function getMovie(imdbId: string) {
+    async function getMovieDetails(imdbId: string) {
         if (!imdbId) throw new Error('Query darf nicht leer sein');
 
         // TMDB liefert in der Suche keine IMDB ID zurück, sondern eine TMDB ID
@@ -37,5 +37,5 @@ export function useMovieDetails() {
         }
     };
 
-    return { ratingDataRecords, getMovie };
+    return { ratingDataRecords, getMovieDetails };
 }

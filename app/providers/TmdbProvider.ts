@@ -43,7 +43,7 @@ export default class TmdbProvider implements MovieRatingProvider {
         }
     }
 
-    async fetchMovie(query: string): Promise<MovieRatingData> {
+    async getMovie(query: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
             const response = await $fetch(`api/providers/tmdb-movie`, {

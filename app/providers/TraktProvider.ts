@@ -13,7 +13,7 @@ export default class ImdbProvider implements MovieRatingProvider {
         throw new Error(`Provider ${this.id} did not support searching for movies.`);
     }
 
-    async fetchMovie(imdbId: string): Promise<MovieRatingData> {
+    async getMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
             const response = await $fetch(`/api/providers/trakt-ratings`, {

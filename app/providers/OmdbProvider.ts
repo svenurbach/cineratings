@@ -39,7 +39,7 @@ export default class OmdbProvider implements MovieRatingProvider {
         }
     }
 
-    async fetchMovie(imdbId: string): Promise<MovieRatingData> {
+    async getMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
             const response = await $fetch(`api/providers/omdb-movie`, {

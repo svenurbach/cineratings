@@ -4,7 +4,7 @@ import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
 const route = useRoute();
 const param = ref(route.query.id);
-const { ratingDataRecords, getMovie } = useMovieDetails();
+const { ratingDataRecords, getMovieDetails } = useMovieDetails();
 const { add } = useMovieHistory();
 const customRecordMetadata = ref<MovieMetadata>();
 const appConfig = useAppConfig()
@@ -18,7 +18,7 @@ const togglePopover = () => {
 };
 
 onMounted(() => {
-  getMovie(param.value).then(() => {
+  getMovieDetails(param.value).then(() => {
     if (customRecordMetadata.value && customRecord.value) {
       add({
         title: customRecordMetadata.value.title,
