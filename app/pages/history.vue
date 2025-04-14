@@ -25,20 +25,20 @@ onMounted(() => {
                 variant="outline"
                 color="neutral"
                 title="Verlauf leeren"
-                @click="clear"
+                @click="() => { clear(); groupedItemsByDate = {}; }"
             />
         </PageHeader>
         <section v-for="(records, date) in groupedItemsByDate" :key="date" class="mt-3">
             <h2>{{ date }}</h2>
             <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                <li v-for="record in records" :key="record.timestamp">
+                <li v-for="record in records" :key="record.imdbId">
                     <ULink :to="{ name: 'movie', query: { id: record.imdbId } }" :title="`Zur Detailseite von ${record.title} wechseln`" class="relative">
                         <MovieItem
                             :title="record.title"
                             :year="record.year"
                             :poster-url="record.posterUrl"
                         />
-                        <div v-if="record.rating" class="absolute top-2 right-5 grid grid-flow-col content-center items-center gap-1 cursor-pointer">
+                        <div v-if="record.rating" class="absolute top-2 left-2 grid grid-flow-col content-center items-center gap-1 cursor-pointer">
                             <div
                             :class="{
                                 'bg-green-600 shadow-green-600/20': record.rating >= 60,
@@ -50,7 +50,6 @@ onMounted(() => {
                             {{ record.rating.toFixed(0) }}
                             </div>
                         </div>
-                        <!-- <p>Rating: {{ record.rating?.toFixed(0) }}</p> -->
                     </ULink>
                 </li>
             </ul>
