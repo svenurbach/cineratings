@@ -5,7 +5,7 @@ import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class TmdbProvider implements MovieRatingProvider {
     readonly id = 'tmdb';
-    readonly name = 'The Movie Database (TMDB)';
+    readonly name = 'TMDB';
     readonly homepageUrl = "https://www.themoviedb.org/";
     readonly logoUrl = 'https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg';
     readonly posterBaseURlSmall = 'https://image.tmdb.org/t/p/w342/';
@@ -58,7 +58,6 @@ export default class TmdbProvider implements MovieRatingProvider {
                     release_date: string;
                     vote_average?: number;
                     vote_count?: number;
-                    runtime?: number;
                     overview?: string;
                 }[];
             }).movie_results[0];
@@ -78,7 +77,6 @@ export default class TmdbProvider implements MovieRatingProvider {
                     year: movieData.release_date.substring(0, 4) ?? "Unknown", // "2005-10-20"
                     imdbId: query,
                     posterUrl: movieData.poster_path ? this.posterBaseURlMedium.concat(movieData.poster_path) : undefined,
-                    runtime: movieData.runtime,
                     plot: movieData.overview ?? "No plot available"
                 }
             };

@@ -5,7 +5,7 @@ import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class ImdbProvider implements MovieRatingProvider {
     readonly id = "trakt";
-    readonly name = "Trakt API";
+    readonly name = "Trakt";
     readonly homepageUrl = "https://trakt.docs.apiary.io/";
     readonly logoUrl = "https://avatars.githubusercontent.com/u/5060045?s=48&v=4";
 

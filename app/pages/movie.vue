@@ -3,7 +3,7 @@ import type { MovieMetadata } from '~/interfaces/MovieMetadata';
 import type { MovieRatingData } from '~/interfaces/MovieRatingData';
 
 const route = useRoute();
-const param = ref(route.query.id);
+const param = route.query.id as string;
 const { ratingDataRecords, getMovieDetails } = useMovieDetails();
 const { add } = useMovieHistory();
 const customRecordMetadata = ref<MovieMetadata>();
@@ -18,7 +18,7 @@ const togglePopover = () => {
 };
 
 onMounted(() => {
-  getMovieDetails(param.value).then(() => {
+  getMovieDetails(param).then(() => {
     if (customRecordMetadata.value && customRecord.value) {
       add({
         title: customRecordMetadata.value.title,
@@ -46,12 +46,11 @@ watch(ratingDataRecords, (newValue) => {
   <section v-if="!isLoading">
     <!-- Filmergebnisse anzeigen -->
     <template v-if="customRecordMetadata">
-      <div class="flex flex-col">
-        <div id="movie-poster" class="relative flex flex-col">
+        <div id="movie-poster" class="relative">
           <!-- Image starts -->
           <img
             :src="customRecordMetadata.posterUrl || 'images/poster-placeholder.jpg'" :alt="customRecordMetadata.title"
-            class="w-full shadow-lg rounded-[calc(var(--ui-radius)*2)]">
+            class="w-full shadow-lg object-top object-cover aspect-2/3 rounded-[calc(var(--ui-radius)*2)]">
           <!-- Image ends -->
           <!-- Buttons start -->
           <UButton
@@ -97,11 +96,17 @@ watch(ratingDataRecords, (newValue) => {
 
             </div>
             <!-- Movie Meta ends -->
-
           </div>
           <!-- Overlay ends -->
         </div>
-      </div>
+        <div v-if="customRecordMetadata.plot">
+          <h2>Handlung</h2>
+          {{ customRecordMetadata.plot}}
+        </div>
+        <div v-if="customRecordMetadata.runtime">
+          <h2>Laufzeit</h2>
+          {{ customRecordMetadata.runtime}}
+        </div>
     </template>
     <p v-else>Filmdaten konnten nicht geladen werden</p>
   </section>

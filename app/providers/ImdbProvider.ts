@@ -5,7 +5,7 @@ import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class ImdbProvider implements MovieRatingProvider {
     readonly id = "imdb";
-    readonly name = "The Internet Movie Database (IMDb)";
+    readonly name = "IMDb";
     readonly homepageUrl = "https://www.imdb.com/";
     readonly logoUrl = "https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg";
 

@@ -5,7 +5,7 @@ import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class OmdbProvider implements MovieRatingProvider {
     readonly id = 'omdb';
-    readonly name = 'Open Media Database API';
+    readonly name = 'OMDb';
     readonly homepageUrl = "https://www.omdbapi.com/";
     readonly logoUrl = "/images/provider/omdb-logo.png";
 
