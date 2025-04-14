@@ -30,8 +30,6 @@ export default defineEventHandler(async (event) => {
 
   // TODO: try catch
   const response = await fetch(url, options);
-  console.log(`[TMDB-Movie] response:`, response);
-
 
   if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
 

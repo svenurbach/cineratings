@@ -11,7 +11,7 @@ export function getCache(key: string): MovieRatingData | null {
         cache.delete(key);
         return null;
     }
-    console.log(`---- [32m[CACHE GET] key: ${key} ----`);
+    console.log(`---- [CACHE GET] key: ${key} ----`);
 
     return entry.data;
 }
