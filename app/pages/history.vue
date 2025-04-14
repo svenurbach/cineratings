@@ -32,12 +32,24 @@ onMounted(() => {
             <h2>{{ date }}</h2>
             <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 <li v-for="record in records" :key="record.timestamp">
-                    <ULink :to="{ name: 'movie', query: { id: record.imdbId } }" :title="`Zur Detailseite von ${record.title} wechseln`">
+                    <ULink :to="{ name: 'movie', query: { id: record.imdbId } }" :title="`Zur Detailseite von ${record.title} wechseln`" class="relative">
                         <MovieItem
                             :title="record.title"
                             :year="record.year"
                             :poster-url="record.posterUrl"
                         />
+                        <div v-if="record.rating" class="absolute top-2 right-5 grid grid-flow-col content-center items-center gap-1 cursor-pointer">
+                            <div
+                            :class="{
+                                'bg-green-600 shadow-green-600/20': record.rating >= 60,
+                                'bg-yellow-600 shadow-yellow-600/20': record.rating >= 40 && record.rating < 60,
+                                'bg-red-600 shadow-red-600/20': record.rating < 40
+                            }"
+                            class="text-md font-bold p-2 rounded-(--ui-radius) text-(--ui-bg) shadow-xl"
+                            >
+                            {{ record.rating.toFixed(0) }}
+                            </div>
+                        </div>
                         <!-- <p>Rating: {{ record.rating?.toFixed(0) }}</p> -->
                     </ULink>
                 </li>
