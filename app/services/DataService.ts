@@ -76,7 +76,8 @@ export default class DataService {
       movieRatingRecords = movieRatingRecords.filter(record => record.id !== this.mainProvider);
     }
 
-    const aggregatedMovieRating = this.ratingService.getAggregatedMovieRating(movieRatingRecords);
+    const ratingWeights = this.getRatingWeightsFromLocalStorage();
+    const aggregatedMovieRating = this.ratingService.getAggregatedMovieRating(movieRatingRecords, ratingWeights.primaryRatingWeight, ratingWeights.userRatingWeight);
     const customRatingRecord = this.buildCustomRatingRecord(movieDetails, aggregatedMovieRating);
     movieRatingRecords.push(customRatingRecord);
 
@@ -96,12 +97,12 @@ export default class DataService {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       const storedProviders = localStorage.getItem('selectedProviders');
       if (storedProviders) {
-          const parsedProviders = JSON.parse(storedProviders);
-          console.log("getProviderListFromLocalStorage->parsedProviders", parsedProviders);
-          return parsedProviders;
+        const parsedProviders = JSON.parse(storedProviders);
+        console.log("getProviderListFromLocalStorage->parsedProviders", parsedProviders);
+        return parsedProviders;
       } else {
-          console.log("getProviderListFromLocalStorage->allProviders", allProviders);
-          return allProviders;
+        console.log("getProviderListFromLocalStorage->allProviders", allProviders);
+        return allProviders;
       }
     };
 
@@ -119,26 +120,44 @@ export default class DataService {
   }
 
   /**
-   * Ruft die Bewertungsdaten eines Films von mehreren Anbietern ab.
-   * @param imdbId Die IMDb-ID des Films.
-   * @param providers Eine Liste von Anbieterinstanzen.
-   * @returns Eine Liste von Bewertungsdaten, gefiltert nach gültigen Antworten.
-   */
+     * Ruft die Bewertungsdaten eines Films von mehreren Anbietern ab (sequenziell).
+     * @param imdbId Die IMDb-ID des Films.
+     * @param providers Eine Liste von Anbieterinstanzen.
+     * @returns Eine Liste von Bewertungsdaten, gefiltert nach gültigen Antworten.
+     */
   private async getMovieRatingsFromProviders(imdbId: string, providers: MovieRatingProvider[]): Promise<(MovieRatingData)[]> {
-    const providerResponses = await Promise.all(
-      providers.map(async provider => {
-        try {
-          return provider.getMovie(imdbId);
-        } catch (error) {
-          console.error(`Fehler bei der Filmsuche mit Provider ${provider}:`, error);
-          return null;
+    const validResponses: MovieRatingData[] = [];
+
+    for (const provider of providers) {
+      try {
+        const response = await provider.getMovie(imdbId);
+        if (response) {
+          validResponses.push(response);
         }
-      })
-    );
-    // Filtern von null Werten
-    const validResponses = providerResponses.filter(response => response != null);
+      } catch (error) {
+        console.error(`Fehler bei der Filmsuche mit Provider ${provider}:`, error);
+      }
+    }
 
     return validResponses;
+  }
+
+  /**
+   * Holt die Daten zur Gewichtung aus dem LocalStorage. Standardgewichtung ist 0,5.
+   * @returns Werte für die Gewichtung von PrimaryRating und UserRating
+   */
+  private getRatingWeightsFromLocalStorage(): { primaryRatingWeight: number, userRatingWeight: number } {
+    const ratingWeights: { primaryRatingWeight: number, userRatingWeight: number } = {
+      primaryRatingWeight: 0.5,
+      userRatingWeight: 0.5
+    };
+    const storedWeights = localStorage.getItem('ratingWeights');
+    if (storedWeights) {
+      const { primaryRatingWeight: storedPrimaryRatingWeight, userRatingWeight: storedUserRatingWeight } = JSON.parse(storedWeights);
+      ratingWeights.primaryRatingWeight = storedPrimaryRatingWeight;
+      ratingWeights.userRatingWeight = storedUserRatingWeight;
+    }
+    return ratingWeights;
   }
 
   /**
