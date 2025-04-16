@@ -41,21 +41,40 @@ export default defineNuxtConfig({
   },
   nitro: {
     routeRules: {
-      '/api/providers/**': {
+      // '/api/providers/**': {
+      //   cache: {
+      //     maxAge: 60 * 60 * 24 * 3, // 3 Tage
+      //   }
+      // },
+      '/api/providers/tmdb-popular': {
         cache: {
-          maxAge: 6000,
-          swr: false
+          maxAge: 60 * 60 * 24 * 1, // 1 Tage
         }
-      }
+      },
+      '/api/providers/tmdb-search': {
+        cache: {
+          maxAge: 60
+        }
+      },
+      '/api/providers/omdb-search': {
+        cache: {
+          maxAge: 60
+        }
+      },
+      '/api/providers/tmdb-get-imdb-id': {
+        cache: {
+          maxAge: 60 * 60 * 24 * 7, // 7 Tage
+        }
+      },
     }
   },
   // ---------------------- KEYS ----------------------
   runtimeConfig: {
     // can be overridden by NUXT_API_SECRET environment variable
-    tmdbApiKey: process.env.TMDB_API_KEY,
-    tmdbBearerToken: process.env.TMDB_BEARER_TOKEN,
-    omdbApiKey: process.env.OMDB_API_KEY,
-    traktClientId: process.env.TRAKT_API_CLIENT_ID,
+    tmdbApiKey: '',
+    tmdbBearerToken: '',
+    omdbApiKey: '',
+    traktAppClientId: '',
     public: {
       // can be overridden by NUXT_PUBLIC_API_BASE environment variable
       apiBase: '',
