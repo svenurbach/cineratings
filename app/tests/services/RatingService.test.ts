@@ -113,7 +113,7 @@ describe('RatingService.getAggregatedMovieRating', () => {
         });
 
         it(`should return aggregated rating for ${JSON.stringify(extractedRatingData)} to be ${expected}`, () => {
-            const result = ratingService.getAggregatedMovieRating(ratingData);
+            const result = ratingService.getAggregatedMovieRating(ratingData, 0.5, 0.5);
             expect(result).toBe(expected);
         });
     }

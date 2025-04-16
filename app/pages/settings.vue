@@ -1,7 +1,11 @@
 <template>
     <div>
         <PageHeader title="Einstellungen" />
-        <ProviderList />
-        <AppThemeButton />
+        <div>
+            <ProviderList />
+            <AppThemeButton />
+            <MovieRatingWeightSlider />
+        </div>
+
     </div>
 </template>

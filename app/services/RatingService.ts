@@ -2,13 +2,9 @@ import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
 export default class RatingService {
     ownMaxRating: number;
-    primaryRatingWeight: number;
-    userRatingWeight: number;
 
     public constructor() {
         this.ownMaxRating = 100;
-        this.primaryRatingWeight = 0.5;
-        this.userRatingWeight = 0.5;
     }
 
     /**
@@ -16,7 +12,7 @@ export default class RatingService {
      * @param ratingDataRecords Eine Liste von Bewertungsdaten für den Film.
      * @returns Die aggregierte Bewertung des Films als Zahl.
      */
-    public getAggregatedMovieRating(ratingDataRecords: MovieRatingData[]): number {
+    public getAggregatedMovieRating(ratingDataRecords: MovieRatingData[], primaryRatingWeight: number, userRatingWeight: number): number {
         let totalPrimaryRating = 0;
         let totalPrimaryRatingCount = 0;
         let totalUserRating = 0;
@@ -52,8 +48,8 @@ export default class RatingService {
             return finalPrimaryRating;
         }
 
-        const finalWeightedMetaScore = (finalPrimaryRating * this.primaryRatingWeight)
-        + (finalUserRating * this.userRatingWeight);
+        const finalWeightedMetaScore = (finalPrimaryRating * primaryRatingWeight)
+        + (finalUserRating * userRatingWeight);
 
         return finalWeightedMetaScore;
     }

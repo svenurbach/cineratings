@@ -19,7 +19,7 @@ watch(selectedProviders, (newVal) => {
 </script>
 
 <template>
-    <section id="provider-list">
+    <section id="provider-list" class="pb-6">
         <h2>Anbieter</h2>
         <p>Wähle die Anbieter aus, welche für die Metascore-Berechnung genutzt werden sollen. </p>
         <div class="p-2">
