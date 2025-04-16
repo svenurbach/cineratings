@@ -3,7 +3,7 @@ import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
 import type { MovieMetadata } from '../interfaces/MovieMetadata';
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
-export default class TmdbProvider implements MovieRatingProvider {
+export default class TmdbDataProvider implements MovieRatingProvider {
     readonly id = 'tmdb';
     readonly name = 'TMDB';
     readonly homepageUrl = "https://www.themoviedb.org/";

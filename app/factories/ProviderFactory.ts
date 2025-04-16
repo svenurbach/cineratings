@@ -2,20 +2,20 @@
  * Factory für die Erstellung von MovieRatingProvider-Instanzen.
  */
 import type { MovieRatingProvider } from "../interfaces/MovieRatingProvider";
-import OmdbProvider from "../providers/OmdbProvider";
-import TmdbProvider from "../providers/TmdbProvider";
-import ImdbProvider from "../providers/ImdbProvider";
-import MetacriticProvider from "../providers/MetacriticProvider";
-import RottenTomatoesProvider from "../providers/RottentomatoesProvider";
-import TrakrProvider from "../providers/TraktProvider";
+import OmdbDataProvider from "../providers/OmdbDataProvider";
+import TmdbDataProvider from "../providers/TmdbDataProvider";
+import ImdbDataProvider from "../providers/ImdbDataProvider";
+import MetacriticDataProvider from "../providers/MetacriticDataProvider";
+import RottenTomatoesProvider from "../providers/RottentomatoesDataProvider";
+import TraktDataProvider from "../providers/TraktDataProvider";
 
 const providerMap: Record<string, new () => MovieRatingProvider> = {
-  tmdb: TmdbProvider,
-  omdb: OmdbProvider,
-  imdb: ImdbProvider,
-  metacritic: MetacriticProvider,
+  tmdb: TmdbDataProvider,
+  omdb: OmdbDataProvider,
+  imdb: ImdbDataProvider,
+  metacritic: MetacriticDataProvider,
   rottentomatoes: RottenTomatoesProvider,
-  trakt: TrakrProvider
+  trakt: TraktDataProvider
 };
 
 export default class ProviderFactory {

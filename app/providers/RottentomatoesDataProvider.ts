@@ -3,11 +3,11 @@ import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
 import type { MovieMetadata } from '../interfaces/MovieMetadata';
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
-export default class MetacriticProvider implements MovieRatingProvider {
-    readonly id = "metacritic";
-    readonly name = "Metacritic";
-    readonly homepageUrl = "https://www.metacritic.com/";
-    readonly logoUrl = "https://upload.wikimedia.org/wikipedia/commons/f/f2/Metacritic_M.png";
+export default class RottentomatoesDataProvider implements MovieRatingProvider {
+    readonly id = "rottentomatoes";
+    readonly name = "Rotten Tomatoes";
+    readonly homepageUrl = "https://www.rottentomatoes.com/";
+    readonly logoUrl = "https://upload.wikimedia.org/wikipedia/commons/6/6f/Rotten_Tomatoes_logo.svg";
 
     searchMovie(_query: string): Promise<MovieMetadata[]> {
         throw new Error(`Provider ${this.id} did not support searching for movies.`);
@@ -30,28 +30,13 @@ export default class MetacriticProvider implements MovieRatingProvider {
                 }[],
             };
 
-            // "Ratings": [
-            //     {
-            //         "Source": "Internet Movie Database",
-            //         "Value": "7.5/10"
-            //     },
-            //     {
-            //         "Source": "Rotten Tomatoes",
-            //         "Value": "96%"
-            //     },
-            //     {
-            //         "Source": "Metacritic",
-            //         "Value": "80/100"
-            //     }
-            // ],
-
             if (!movieData) throw new Error('No movie found');
 
-            const metacriticRating = movieData.Ratings
-                ? movieData.Ratings.find((rating) => rating.Source === 'Metacritic')?.Value
+            const rtRating = movieData.Ratings
+                ? movieData.Ratings.find((rating) => rating.Source === 'Rotten Tomatoes')?.Value
                 : undefined;
-            const primaryRating = metacriticRating && metacriticRating !== 'N/A'
-                ? metacriticRating.split('/')[0]
+            const primaryRating = rtRating && rtRating !== 'N/A'
+                ? rtRating.split('%')[0]
                 : undefined;
 
             const providerResponse: MovieRatingData = {
@@ -74,5 +59,4 @@ export default class MetacriticProvider implements MovieRatingProvider {
             throw error;
         }
     }
-
 }

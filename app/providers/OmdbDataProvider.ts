@@ -3,7 +3,7 @@ import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
 import type { MovieMetadata } from '../interfaces/MovieMetadata';
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
-export default class OmdbProvider implements MovieRatingProvider {
+export default class OmdbDataProvider implements MovieRatingProvider {
     readonly id = 'omdb';
     readonly name = 'OMDb';
     readonly homepageUrl = "https://www.omdbapi.com/";

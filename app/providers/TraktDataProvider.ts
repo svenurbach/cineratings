@@ -3,11 +3,11 @@ import type { MovieMetadata } from '../interfaces/MovieMetadata';
 import type { MovieRatingProvider } from '../interfaces/MovieRatingProvider';
 import type { MovieRatingData } from '../interfaces/MovieRatingData';
 
-export default class ImdbProvider implements MovieRatingProvider {
-    readonly id = "imdb";
-    readonly name = "IMDb";
-    readonly homepageUrl = "https://www.imdb.com/";
-    readonly logoUrl = "https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg";
+export default class TraktDataProvider implements MovieRatingProvider {
+    readonly id = "trakt";
+    readonly name = "Trakt";
+    readonly homepageUrl = "https://trakt.docs.apiary.io/";
+    readonly logoUrl = "https://avatars.githubusercontent.com/u/5060045?s=48&v=4";
 
     searchMovie(_query: string): Promise<MovieMetadata[]> {
         throw new Error(`Provider ${this.id} did not support searching for movies.`);
@@ -16,16 +16,13 @@ export default class ImdbProvider implements MovieRatingProvider {
     async getMovie(imdbId: string): Promise<MovieRatingData> {
         try {
             // Interne Server Route aufrufen. Token ist dort hinterlegt.
-            const response = await $fetch(`api/providers/omdb-movie`, {
+            const response = await $fetch(`/api/providers/trakt-ratings`, {
                 query: { imdbId }
             });
 
             const movieData = response as {
-                imdbID: string,
-                Title: string,
-                Year: string,
-                imdbRating: string,
-                imdbVotes: string,
+                rating?: number,
+                votes?: number,
             };
 
             if (!movieData) throw new Error('No movie found');
@@ -35,19 +32,19 @@ export default class ImdbProvider implements MovieRatingProvider {
                 name: this.name,
                 homepageUrl: this.homepageUrl,
                 logoUrl: this.logoUrl,
-                userRating: movieData.imdbRating !== 'N/A' && movieData.imdbRating ? Number(movieData.imdbRating) : undefined,
-                userVotes: movieData.imdbVotes !== 'N/A' && movieData.imdbVotes ? Number(movieData.imdbVotes.replaceAll(',', '')) : undefined,
+                userRating: movieData.rating,
+                userVotes: movieData.votes,
                 movieMetadata: {
-                    title: movieData.Title,
-                    year: movieData.Year,
-                    imdbId: movieData.imdbID,
+                    title: "no title",
+                    year: "no year",
+                    imdbId: imdbId,
                 }
             };
 
             return providerResponse;
 
         } catch (error) {
-            console.error('Fehler beim fetchen der Daten:', error);
+            console.error('Fehler:', error);
             throw error;
         }
     }
