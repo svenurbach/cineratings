@@ -74,7 +74,7 @@ export default defineNuxtConfig({
     tmdbApiKey: '',
     tmdbBearerToken: '',
     omdbApiKey: '',
-    traktAppClientId: '',
+    traktApiClientId: '',
     public: {
       // can be overridden by NUXT_PUBLIC_API_BASE environment variable
       apiBase: '',

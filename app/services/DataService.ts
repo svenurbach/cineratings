@@ -135,7 +135,7 @@ export default class DataService {
           validResponses.push(response);
         }
       } catch (error) {
-        console.error(`Fehler bei der Filmsuche mit Provider ${provider}:`, error);
+        console.error(`Fehler bei der Filmsuche mit Provider ${provider.id}:`, error);
       }
     }
 

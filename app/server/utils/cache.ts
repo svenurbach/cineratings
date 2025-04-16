@@ -1,5 +1,6 @@
 import type { MovieRatingData } from "../../interfaces/MovieRatingData";
 
+// TODO: Auf Nitro (use)Storage (Memory) wechseln
 const cache = new Map<string, { data: MovieRatingData; expires: number }>();
 
 export function getCache(key: string): MovieRatingData | null {

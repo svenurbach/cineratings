@@ -2,7 +2,7 @@ import { getCache, setCache } from "../../utils/cache";
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
-    const apiKey = config.traktClientId;
+    const apiKey = config.traktApiClientId;
 
     const query = getQuery(event);
     const imdbId = query.imdbId as string;
@@ -26,16 +26,33 @@ export default defineEventHandler(async (event) => {
         method: 'GET',
         headers: {
             'Content-type': 'application/json',
+            'User-Agent': 'CineRatings/1.0.0',
             'trakt-api-key': apiKey,
             'trakt-api-version': '2'
         }
     };
 
-    const response = await fetch(url, options);
+    try {
+        const response = await fetch(url, options);
 
-    if (!response.ok) throw new Error('Fehler beim Abrufen der Daten');
+        if (!response.ok) {
+            throw createError({
+                statusCode: response.status,
+                statusMessage: `Fehler beim Abrufen der Daten: ${response.statusText}`
+            });
+        }
 
-    const data = await response.json();
+        const data = await response.json();
+
+        // Antwort im Cache ablegen (TTL: 5 Minuten)
+        setCache(cacheKey, data, 5 * 60 * 1000);
+
+        return data;
+
+    } catch (error) {
+        // Fehlerbehandlung
+        console.error('Fehler beim Abrufen der Trakt-Daten:', error);
+    }
 
     // {
     //     "rating": 7.47316,
@@ -53,12 +70,5 @@ export default defineEventHandler(async (event) => {
     //         "10": 464
     //     }
     // }
-
-    // Antwort im Cache ablegen (TTL: 5 Minuten)
-    setCache(cacheKey, data, 5 * 60 * 1000);
-
-    return data;
-
-    // return exampleResponse;
 
 });
